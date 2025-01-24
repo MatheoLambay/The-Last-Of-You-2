@@ -1,12 +1,12 @@
 import pygame
 from menu_manager import menuManager
-from main_menu import mainMenu
+from menu.main_menu import mainMenu
 
 
 pygame.init()
 
 menu_manager = menuManager()
-menu_manager.push_menu(mainMenu())
+menu_manager.push_menu(mainMenu(menu_manager.screen))
 
 
 run = True

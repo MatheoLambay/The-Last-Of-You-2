@@ -2,11 +2,13 @@ import pygame
 from button import Button
 
 class settingsMenu:
-    def __init__(self):
+    def __init__(self,screen):
+        self.screen = screen
+        self.title_img = pygame.image.load("img\settings_menu\menutitle.png").convert_alpha()
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.background_img = pygame.image.load("img\settings_menu\sbackground.webp").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
-        self.back_button = Button(1000,200,self.back_img,0.8)
+        self.back_button = Button(self.screen,20,900,self.back_img,0.8)
 
     def fade(self,screen,SCREENWIDTH, SCREENHEIGHT): 
         fade = pygame.Surface((SCREENWIDTH, SCREENHEIGHT))
@@ -28,19 +30,19 @@ class settingsMenu:
         backgroungrect = self.background_img.get_rect()
         backgroungrect.topleft = (0,0)
         screen.blit(self.background_img, backgroungrect)
-        # pygame.font.init()
-        # title = pygame.font.Font('freesansbold.ttf', 32)
-        # title_text = title.render("settings",True,(255, 0, 0))
-        # textRect = title_text.get_rect()
-        # textRect.center = (1920/2,50)
-        # screen.blit(title_text, textRect)
+
+        titlerect = self.title_img.get_rect()
+        titlerect.topleft = (0,1080/100)
+        screen.blit(self.title_img, titlerect)
+        
+        self.back_button.draw()
 
     def close(self):
         pass
 
     def update(self, event, manager):
         """Met à jour les interactions du menu."""
-        if self.back_button.draw(manager.screen):
+        if self.back_button.detect():
             self.fade(manager.screen,1920,1080)
             manager.pop_menu()
 

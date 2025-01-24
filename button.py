@@ -2,16 +2,22 @@ import pygame
 
 #button class
 class Button():
-	def __init__(self, x, y, image, scale):
+	def __init__(self,screen, x, y, image, scale=1):
 		width = image.get_width()
 		height = image.get_height()
 
+		self.screen = screen
 		self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
 		self.rect = self.image.get_rect()
-		self.rect.center = (x,y)
+		self.rect.topleft = (x,y)
 		self.clicked = False
+		
 
-	def draw(self, surface):
+	def draw(self):
+		self.screen.blit(self.image, (self.rect.x, self.rect.y))
+
+
+	def detect(self):
 		action = False
 		#get mouse position
 		pos = pygame.mouse.get_pos()
@@ -21,11 +27,7 @@ class Button():
 				
 			if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
 				self.clicked = True
-				self.toggle = not getattr(self, 'toggle', False)  # Inverser l'état du toggle
 				action = True
-
-			
-		surface.blit(self.image, (self.rect.x, self.rect.y))
 
 		if pygame.mouse.get_pressed()[0] == 0:
 			self.clicked = False
