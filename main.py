@@ -19,7 +19,7 @@ while run:
 	if current_menu:
 		current_menu.update(event,menu_manager)
 		
-
+	
 	pygame.display.update()
 
 pygame.quit()
