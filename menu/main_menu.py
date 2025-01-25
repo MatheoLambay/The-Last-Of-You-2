@@ -65,5 +65,5 @@ class mainMenu:
 
         if self.start_button.detect():
             self.fade(manager.screen,1920,1080)
-            from menu.select_mode_menu import selectModeMenu
+            from menu.select_menu import selectModeMenu
             manager.push_menu(selectModeMenu(self.screen))
