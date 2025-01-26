@@ -129,16 +129,16 @@ class gameManager(Map):
                 b.draw()
                 #b.rect.colliderect(z.rect)
                 for z in self.zombies:
-                    if( z.x - 10 <= b.x <= z.x + 10 and z.y - 10 <= b.y <= z.y + 10):
+                    if( z.x - 20 <= b.x <= z.x + 20 and z.y - 20 <= b.y <= z.y + 20):
                         self.player.Attack(z)
                         
                         if z.life < 1:
                             """zombie drop"""
-                            drop = random.randint(1,10)
-                            if 1 <= drop <= 3:
-                                self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,10,"ammo",0.1))
+                            drop = random.randint(1,100)
+                            if 1 <= drop <= 30:
+                                self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",0.1))
                             
-                            elif 4 <= drop <= 6:
+                            elif 30 <= drop <= 40:
                                 self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",0.1))
 
                             self.zombies.pop(self.zombies.index(z))
