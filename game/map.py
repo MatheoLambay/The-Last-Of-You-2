@@ -10,8 +10,6 @@ class Map:
         self.max_case_y = 2
         self.min_case_x = 0
         self.min_case_y = 0
-        self.map_ground1_2 = pygame.image.load("img\settings_menu\sbackground.webp").convert_alpha()
-        self.map_ground2_2 = pygame.image.load("img\main_menu\mbackground.png").convert_alpha()
         self.map = map
         self.border = {"up":0,"down":0,"left":0,"right":0}
         

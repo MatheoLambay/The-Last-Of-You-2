@@ -14,12 +14,15 @@ class Player:
 
         self.x = x
         self.y = y     
-        self.life = life
+        self.life_max = life
+        self.life = self.life_max
+
         self.attack = attack
         self.attack_speed = 1
         self.score = score
         self.velocity = 2
-        self.weapon_bullet = 100
+        self.weapon_bullet_max = 100
+        self.weapon_bullet = self.weapon_bullet_max
         self.alive = 1
         
         

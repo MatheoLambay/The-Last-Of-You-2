@@ -42,7 +42,7 @@ class gameManager(Map):
         self.zombie_interval = 1000
 
         self.last_damage_time = 0
-        self.damage_interval = 3000
+        self.damage_interval = 2000
         
     
        
@@ -127,14 +127,20 @@ class gameManager(Map):
                 self.bullet.pop(self.bullet.index(b))
             else:
                 b.draw()
+                #b.rect.colliderect(z.rect)
                 for z in self.zombies:
-                    if(b.rect.colliderect(z.rect)):
+                    if( z.x - 10 <= b.x <= z.x + 10 and z.y - 10 <= b.y <= z.y + 10):
                         self.player.Attack(z)
                         
                         if z.life < 1:
+                            """zombie drop"""
                             drop = random.randint(1,10)
-                            if drop <= 3:
-                                self.items.append(dropBullet(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,10,0.1))
+                            if 1 <= drop <= 3:
+                                self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,10,"ammo",0.1))
+                            
+                            elif 4 <= drop <= 6:
+                                self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",0.1))
+
                             self.zombies.pop(self.zombies.index(z))
 
                         self.bullet.pop(self.bullet.index(b))
@@ -143,10 +149,15 @@ class gameManager(Map):
         for i in self.items:
             if i.map_x == self.map.case_x and i.map_y == self.map.case_y:
                 i.draw()
-            if(i.rect.colliderect(self.player.rect)):
+            if(self.player.x-20 <= i.x <= self.player.x+20 and self.player.y-20 <= i.y <= self.player.y+20):
+                if i.name == "ammo" and self.player.weapon_bullet < self.player.weapon_bullet_max:
+                    i.give_ammo_to(self.player)
+                elif i.name == "heal" and self.player.life < self. player.life_max:
+                    i.give_life_to(self.player)
+
                 self.items.pop(self.items.index(i))
-                i.give_to(self.player)
                 self.player_bar.ammo = self.player.weapon_bullet
+                self.player_bar.hp = self.player.life
             
 
         for z in self.zombies:
@@ -155,7 +166,7 @@ class gameManager(Map):
                 z.move_to(self.player.x,self.player.y)
                 if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
                     z.draw()
-            if(self.player.x-10 <= z.x <= self.player.x+10 and self.player.y-10 <= z.y <= self.player.y+10)   : 
+            if(self.player.x-20 <= z.x <= self.player.x+20 and self.player.y-20 <= z.y <= self.player.y+20)   : 
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_damage_time >= self.damage_interval:
                     z.Attack(self.player)

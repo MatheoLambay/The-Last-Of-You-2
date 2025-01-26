@@ -60,7 +60,6 @@ class Zombie(pygame.sprite.Sprite):
         self.rect.center = (self.x, self.y)
 
     def Attack(self,cible):
-        print('ici')
         cible.life -= self.attack
 
     def draw(self):

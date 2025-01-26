@@ -4,3 +4,5 @@
         # textRect = title_text.get_rect()
         # textRect.center = (1920/2,50)
         # screen.blit(title_text, textRect)
+
+#i.rect.colliderect(self.player.rect)
