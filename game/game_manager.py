@@ -75,6 +75,11 @@ class gameManager(Map):
         if map_position != None:
             self.background = self.map.switch_map(map_position)
             self.screen.blit(self.background,(0,0))
+            if map_position == "u":
+                for z in self.zombies:
+                    z.y += 1080
+        """iciiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"""
+        
 
         self.border = self.map.map_border()
 
