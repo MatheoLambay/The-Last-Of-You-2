@@ -77,8 +77,25 @@ class gameManager(Map):
         elif self.player.weapon_bullet == 0:
             print("no bullet") 
 
+
+        """spawn zombie"""
         if current_time - self.last_zombie_time >= self.zombie_interval:
-            self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",100,100,3,1))
+            if(random.randint(0,1)):
+                if(random.randint(0,1)):
+                    spawn_position_x = random.randint(0,1920)
+                    spawn_position_y = 0
+                else:
+                    spawn_position_x = random.randint(0,1920)
+                    spawn_position_y = 1080
+            else:
+                if(random.randint(0,1)):
+                    spawn_position_x = 0
+                    spawn_position_y = random.randint(0,1080)
+                else:
+                    spawn_position_x = 1920
+                    spawn_position_y = random.randint(0,1080)
+
+            self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",spawn_position_x,spawn_position_y,3,1))
             self.last_zombie_time = current_time
             
 
@@ -138,7 +155,7 @@ class gameManager(Map):
                 z.move_to(self.player.x,self.player.y)
                 if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
                     z.draw()
-            if( self.player.x-10 <= z.x <= self.player.x+10 and self.player.y-10 <= z.y <= self.player.y+10)   : 
+            if(self.player.x-10 <= z.x <= self.player.x+10 and self.player.y-10 <= z.y <= self.player.y+10)   : 
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_damage_time >= self.damage_interval:
                     z.Attack(self.player)

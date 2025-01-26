@@ -1,7 +1,7 @@
 import pygame
 import math
 
-class Zombie:
+class Zombie(pygame.sprite.Sprite):
     def __init__(self,screen,link,x,y,life,attack):
         self.screen = screen
 
