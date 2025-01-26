@@ -4,7 +4,7 @@ from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
 from game.bullet import Bullet
-from game.healthbar import HealthBar
+from game.hud import Hud
 from game.items import *
 
 
@@ -16,7 +16,7 @@ class gameManager(Map):
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
 
-        self.player_bar = HealthBar(screen,self.player.x,self.player.y,100,10,self.player.life)
+        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet)
 
         self.map1 = pygame.image.load("img\game\map1.png").convert_alpha()
         self.map2 = pygame.image.load("img\game\map2.png").convert_alpha()
@@ -72,6 +72,7 @@ class gameManager(Map):
             if current_time - self.last_bullet_time >= self.bullet_interval:
                 self.bullet.append(Bullet(self.screen,"img\game\ibullet.png", self.player.x, self.player.y, mouse_pos,0.8))
                 self.player.weapon_bullet -= 1
+                self.player_bar.ammo = self.player.weapon_bullet
                 self.last_bullet_time = current_time    
         elif self.player.weapon_bullet == 0:
             print("no bullet") 
@@ -128,6 +129,7 @@ class gameManager(Map):
             if(i.rect.colliderect(self.player.rect)):
                 self.items.pop(self.items.index(i))
                 i.give_to(self.player)
+                self.player_bar.ammo = self.player.weapon_bullet
             
 
         for z in self.zombies:
@@ -136,7 +138,7 @@ class gameManager(Map):
                 z.move_to(self.player.x,self.player.y)
                 if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
                     z.draw()
-            if(z.rect.colliderect(self.player.rect)): 
+            if( self.player.x-10 <= z.x <= self.player.x+10 and self.player.y-10 <= z.y <= self.player.y+10)   : 
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_damage_time >= self.damage_interval:
                     z.Attack(self.player)
