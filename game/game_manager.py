@@ -1,8 +1,12 @@
 import pygame
+import random
 from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
 from game.bullet import Bullet
+from game.healthbar import HealthBar
+from game.items import *
+
 
 class gameManager(Map):
    
@@ -11,8 +15,8 @@ class gameManager(Map):
         self.background = pygame.image.load("img\game\map5.png").convert_alpha()
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
-        #self.zombie = Zombie(screen,"img\game\zombie\greendead_haut.png",100,100,3,1)
-        # self.bullet = Bullet(self.screen,"img\game\imgbullet.png",self.player.x,self.player.y,(100,100))
+
+        self.player_bar = HealthBar(screen,self.player.x,self.player.y,100,10,self.player.life)
 
         self.map1 = pygame.image.load("img\game\map1.png").convert_alpha()
         self.map2 = pygame.image.load("img\game\map2.png").convert_alpha()
@@ -29,13 +33,18 @@ class gameManager(Map):
 
         self.bullet = []
         self.zombies = []
+        self.items = []
 
         self.last_bullet_time = 0
         self.bullet_interval = 100 
 
         self.last_zombie_time = 0
         self.zombie_interval = 1000
+
+        self.last_damage_time = 0
+        self.damage_interval = 3000
         
+    
        
         
     def open(self, screen):
@@ -61,24 +70,32 @@ class gameManager(Map):
         current_time = pygame.time.get_ticks()
         if mouse_click[0] and self.player.weapon_bullet > 0: 
             if current_time - self.last_bullet_time >= self.bullet_interval:
-                self.bullet.append(Bullet(self.screen,"img\game\imgbullet.png", self.player.x, self.player.y, mouse_pos))
+                self.bullet.append(Bullet(self.screen,"img\game\ibullet.png", self.player.x, self.player.y, mouse_pos,0.8))
                 self.player.weapon_bullet -= 1
                 self.last_bullet_time = current_time    
         elif self.player.weapon_bullet == 0:
-            pass  
+            print("no bullet") 
 
         if current_time - self.last_zombie_time >= self.zombie_interval:
             self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",100,100,3,1))
             self.last_zombie_time = current_time
+            
 
         map_position = self.player.move(pygame.key.get_pressed(),self.border)
+        self.player_bar.move(self.player.rect.bottomleft[0],self.player.rect.bottomleft[1])
+
         if map_position != None:
             self.background = self.map.switch_map(map_position)
             self.screen.blit(self.background,(0,0))
-            if map_position == "u":
-                for z in self.zombies:
+            for z in self.zombies:  
+                if map_position == "u":
                     z.y += 1080
-        """iciiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"""
+                elif map_position == "d":
+                    z.y -= 1080
+                elif map_position == "l":
+                    z.x += 1920
+                elif map_position == "r":
+                    z.x -= 1920
         
 
         self.border = self.map.map_border()
@@ -94,18 +111,43 @@ class gameManager(Map):
                 b.draw()
                 for z in self.zombies:
                     if(b.rect.colliderect(z.rect)):
-                        self.bullet.pop(self.bullet.index(b))
                         self.player.Attack(z)
+                        
                         if z.life < 1:
+                            drop = random.randint(1,10)
+                            if drop <= 3:
+                                self.items.append(dropBullet(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,10,0.1))
                             self.zombies.pop(self.zombies.index(z))
+
+                        self.bullet.pop(self.bullet.index(b))
+                        break
+                                
+        for i in self.items:
+            if i.map_x == self.map.case_x and i.map_y == self.map.case_y:
+                i.draw()
+            if(i.rect.colliderect(self.player.rect)):
+                self.items.pop(self.items.index(i))
+                i.give_to(self.player)
+            
 
         for z in self.zombies:
             if z.life > 0:
                 z.point_at((self.player.x,self.player.y))
                 z.move_to(self.player.x,self.player.y)
-                z.draw()
+                if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
+                    z.draw()
+            if(z.rect.colliderect(self.player.rect)): 
+                current_time = pygame.time.get_ticks()
+                if current_time - self.last_damage_time >= self.damage_interval:
+                    z.Attack(self.player)
+                    self.player_bar.hp = self.player.life
+                    self.last_damage_time = current_time
+                    if self.player.life < 1:
+                        self.player.alive = 0 
 
         
+    
+        
+        self.player_bar.draw()
         self.player.draw()
        
-        

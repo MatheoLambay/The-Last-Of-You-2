@@ -2,11 +2,13 @@ import pygame
 import math
 
 class Bullet:
-    def __init__(self,screen,link,x,y,m_pos):
+    def __init__(self,screen,link,x,y,m_pos,scale=1):
         self.screen = screen
-
         self.original_image = pygame.image.load(link)
-        self.original_image = pygame.transform.scale(self.original_image, (90 // 1.5, 112 // 1.5))
+        width = self.original_image.get_width()
+        height = self.original_image.get_height()
+
+        self.original_image = pygame.transform.scale(self.original_image, (int(width * scale), int(height * scale)))
         self.image = self.original_image
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)

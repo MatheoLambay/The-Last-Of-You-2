@@ -39,17 +39,29 @@ class Zombie:
 
     def move_to(self,targetx,targety):
         
-        if targetx > self.x:
-            self.x += 1 * self.velocity
-        elif targetx < self.x:
-            self.x -= 1 * self.velocity
-        
-        if targety > self.y:
-           self.y += 1 * self.velocity
-        elif targety < self.y:
-            self.y -= 1 * self.velocity
+         # Calcul de la direction
+        dx = targetx - self.x
+        dy = targety - self.y
+        distance = math.sqrt(dx**2 + dy**2)
 
-        self.rect.center = (self.x,self.y)
+        # Normalisation du vecteur directionnel
+        if distance != 0:
+            direction_x = dx / distance
+            direction_y = dy / distance
+        else:
+            direction_x, direction_y = 0, 0  # Éviter division par zéro si déjà à destination
+
+        # Ajustement de la vitesse
+        
+        self.x += direction_x * self.velocity
+        self.y += direction_y * self.velocity
+
+        # Mise à jour de la position
+        self.rect.center = (self.x, self.y)
+
+    def Attack(self,cible):
+        print('ici')
+        cible.life -= self.attack
 
     def draw(self):
         self.screen.blit(self.image,self.rect)
