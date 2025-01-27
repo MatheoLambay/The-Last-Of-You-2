@@ -24,6 +24,10 @@ class Player:
         self.weapon_bullet_max = 100
         self.weapon_bullet = self.weapon_bullet_max
         self.alive = 1
+        self.collision = []
+        self.direction = None
+        self.can_attack = 1
+        self.gold = 0
         
         
          
@@ -46,15 +50,20 @@ class Player:
 
     
     def move(self,key,border):
+    
         if self.alive:
+            
             if key[pygame.K_z]:
+                self.direction = "u"
                 if self.y > 0:
                     self.y -= 1 * self.velocity
                 elif self.y == 0 and border["up"]:
                     self.y = 1080
                     return "u"
+                    
                 
             if key[pygame.K_s]:
+                self.direction = "d"
                 if self.y < 1080:
                     self.y += 1 * self.velocity
                 elif self.y == 1080 and border["down"]:
@@ -62,6 +71,7 @@ class Player:
                     return "d"
 
             if key[pygame.K_d]:
+                self.direction = "r"
                 if self.x < 1920:
                     self.x += 1 * self.velocity
                 elif self.x == 1920 and border["right"]:
@@ -69,12 +79,13 @@ class Player:
                     return "r"
             
             if key[pygame.K_q]:
+                self.direction = "l"
                 if self.x > 0:
                     self.x -= 1 * self.velocity
                 elif self.x == 0 and border["left"]:
                     self.x = 1920
                     return "l"
-                
+            
             self.rect.center = (self.x,self.y)
             return None
      
@@ -85,3 +96,4 @@ class Player:
     
     def draw(self):
         self.screen.blit(self.image,self.rect)
+

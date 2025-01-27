@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self,screen,link,x,y,life,attack):
+    def __init__(self,screen,link,x,y,life,attack,gold):
         self.screen = screen
 
         self.original_image = pygame.image.load(link)
@@ -17,6 +17,7 @@ class Zombie(pygame.sprite.Sprite):
         self.y = y
         self.velocity = 0.5
         self.angle = 0
+        self.gold = gold
         
 
 
@@ -61,6 +62,9 @@ class Zombie(pygame.sprite.Sprite):
 
     def Attack(self,cible):
         cible.life -= self.attack
+
+    def drop_gold(self,cible):
+        cible.gold += self.gold
 
     def draw(self):
         self.screen.blit(self.image,self.rect)

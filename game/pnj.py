@@ -1,7 +1,7 @@
 import pygame
 
 class SellerPnj:
-    def __init__(self,screen,link,x,y,map_x,map_y,name,attack,scale=1):
+    def __init__(self,screen,link,x,y,map_x,map_y,name,attack,hitbox,scale=1):
         self.screen = screen
         self.name = name
         self.image = pygame.image.load(link)
@@ -15,10 +15,10 @@ class SellerPnj:
         self.map_x = map_x
         self.map_y = map_y
         self.attack = attack
+        self.hitbox = hitbox
 
-    def Attack(self):
-        pass
-    """icccicicicicicicicicicicicici"""
+    def Attack(self,cible):
+        cible.life -= self.attack
 
     def draw(self):
         self.screen.blit(self.image,self.rect)
