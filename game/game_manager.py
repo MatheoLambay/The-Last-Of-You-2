@@ -46,7 +46,9 @@ class gameManager(Map):
 
         self.last_damage_time = 0
         self.damage_interval = 2000
-        
+
+        self.market_button = 0
+
     
     def open(self, screen):
         screen.fill((255,255,255))
@@ -82,6 +84,8 @@ class gameManager(Map):
                 self.last_bullet_time = current_time    
         elif self.player.weapon_bullet == 0:
             pass
+            # self.player.weapon_bullet_max = 200
+            # self.player.weapon_bullet = self.player.weapon_bullet_max
 
 
         """spawn zombie"""
@@ -146,9 +150,6 @@ class gameManager(Map):
                             
                             elif 30 <= drop <= 35:
                                 self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
-
-                            # self.zombies.pop(self.zombies.index(z))
-
                         self.bullet.pop(self.bullet.index(b))
                         break
 
@@ -183,8 +184,15 @@ class gameManager(Map):
                 keyboard = pygame.key.get_pressed()
                 if p.rect.colliderect(self.player.rect):
                     self.player.can_attack = 0
-                    if keyboard[pygame.K_e]:
+                    key = keyboard[pygame.K_e]
+                    if key and self.market_button == 0:
+                        
+                        from game.shop import shopMenu
+                        manager.push_menu(shopMenu(self.screen,self.player))
+                        
                         print("pnj détecté")
+                    self.market_button = key
+                    
                    
                 
                 """Gestion de collision avec le joueur"""
@@ -228,7 +236,8 @@ class gameManager(Map):
         self.player_bar.gold = self.player.gold
         self.player_bar.ammo = self.player.weapon_bullet
         self.player_bar.hp = self.player.life
-
+        self.player_bar.max_hp = self.player.life_max
+        
         self.player_bar.draw()
         self.player.draw()
        

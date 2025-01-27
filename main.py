@@ -18,7 +18,7 @@ while run:
 	current_menu = menu_manager.get_current_menu()
 	if current_menu:
 		current_menu.update(event,menu_manager)
-		
+	
 	
 	pygame.display.update()
 

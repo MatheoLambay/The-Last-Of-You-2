@@ -1,0 +1,21 @@
+{
+"max_life" : 
+{
+    "description":"increase life max",
+    "link":"img/game/heal.webp",
+    "price": 400,
+    "amont": 3
+
+},
+"max_ammo" : 
+{
+    "description":"increase max ammo",
+    "link":"img/game/iammo.webp",
+    "price": 400,
+    "amont": 100
+
+}
+
+    
+
+}

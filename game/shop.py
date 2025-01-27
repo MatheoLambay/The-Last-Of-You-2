@@ -1,0 +1,69 @@
+import pygame
+import json
+import random
+from button import Button
+from game.upgrade import upgrade
+
+
+class shopMenu:
+    def __init__(self,screen,player):
+        self.screen = screen
+        self.player = player
+
+        self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
+        
+        self.background_img = pygame.image.load("img\game\shopbackgorund.jpg").convert_alpha()
+        self.back_button = Button(self.screen,1800,0,self.back_img,0.8)
+        self.bg_rect = self.background_img.get_rect()
+
+        self.random_upgrade = []
+        self.current_upgrade = []
+
+        with open('game/upgrade.json','r') as f:
+            self.data = json.load(f)
+       
+        self.selectUpgrade()
+        
+        
+
+    def selectUpgrade(self):
+        space = 0
+        for i in range(2):
+            self.random_upgrade.append(random.choice(list(self.data)))
+        
+        """création des boutons et des images"""
+        for i in self.random_upgrade:
+            image = pygame.image.load(self.data[i]["link"]).convert_alpha()
+            button = Button(self.screen,self.bg_rect.topright[0]+space,0,image,0.1)
+            space += 100
+            up = upgrade(self.data[i]["description"],self.data[i]["amont"])
+            self.current_upgrade.append((button,up))
+        
+        
+    def open(self, screen):
+       
+        backgroungrect = self.background_img.get_rect()
+        backgroungrect.topright = (1920,0)
+        screen.blit(self.background_img, backgroungrect)        
+        self.back_button.draw()
+        for i in self.current_upgrade:
+            i[0].draw()
+        """afficher prix et nom"""
+
+       
+    def close(self):
+        pass
+
+
+    def update(self, event, manager):
+        
+        """Met à jour les interactions du menu."""
+        if self.back_button.detect():
+           
+            manager.pop_menu()
+
+        for i in self.current_upgrade:
+            if i[0].detect():
+                i[1].apply(self.player)
+            """checker total gold"""
+            
