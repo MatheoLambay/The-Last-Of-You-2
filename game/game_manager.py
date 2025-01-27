@@ -5,7 +5,9 @@ from game.map import Map
 from game.zombie import Zombie
 from game.bullet import Bullet
 from game.hud import Hud
+from game.pnj import SellerPnj
 from game.items import *
+
 
 
 class gameManager(Map):
@@ -34,6 +36,7 @@ class gameManager(Map):
         self.bullet = []
         self.zombies = []
         self.items = []
+        self.pnjs = []
 
         self.last_bullet_time = 0
         self.bullet_interval = 100 
@@ -45,15 +48,16 @@ class gameManager(Map):
         self.damage_interval = 2000
         
     
-       
-        
     def open(self, screen):
         screen.fill((255,255,255))
         self.screen.blit(self.background,(0,0))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.jpg",100,100,0,0,"vendeur",999))
         
         
     def close(self):
         self.bullet = []
+        self.zombies = []
+        self.items = []
 
     def update(self, event, manager):
         
@@ -63,6 +67,7 @@ class gameManager(Map):
     
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()
+
        
         self.player.point_at(mouse_pos)
         
@@ -75,7 +80,7 @@ class gameManager(Map):
                 self.player_bar.ammo = self.player.weapon_bullet
                 self.last_bullet_time = current_time    
         elif self.player.weapon_bullet == 0:
-            print("no bullet") 
+            pass
 
 
         """spawn zombie"""
@@ -118,7 +123,6 @@ class gameManager(Map):
 
         self.border = self.map.map_border()
 
-
         self.screen.blit(self.background,(0,0))
 
         for b in self.bullet:
@@ -127,7 +131,6 @@ class gameManager(Map):
                 self.bullet.pop(self.bullet.index(b))
             else:
                 b.draw()
-                #b.rect.colliderect(z.rect)
                 for z in self.zombies:
                     if( z.x - 20 <= b.x <= z.x + 20 and z.y - 20 <= b.y <= z.y + 20):
                         self.player.Attack(z)
@@ -136,10 +139,10 @@ class gameManager(Map):
                             """zombie drop"""
                             drop = random.randint(1,100)
                             if 1 <= drop <= 30:
-                                self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",0.1))
+                                self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",5000,0.1))
                             
-                            elif 30 <= drop <= 40:
-                                self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",0.1))
+                            elif 30 <= drop <= 35:
+                                self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
 
                             self.zombies.pop(self.zombies.index(z))
 
@@ -147,6 +150,7 @@ class gameManager(Map):
                         break
                                 
         for i in self.items:
+            current_time = pygame.time.get_ticks()
             if i.map_x == self.map.case_x and i.map_y == self.map.case_y:
                 i.draw()
             if(self.player.x-20 <= i.x <= self.player.x+20 and self.player.y-20 <= i.y <= self.player.y+20):
@@ -156,9 +160,19 @@ class gameManager(Map):
                     i.give_life_to(self.player)
 
                 self.items.pop(self.items.index(i))
-                self.player_bar.ammo = self.player.weapon_bullet
-                self.player_bar.hp = self.player.life
-            
+            elif(current_time - i.damage_interval >= i.last_damage_time):
+                self.items.pop(self.items.index(i))
+
+            self.player_bar.ammo = self.player.weapon_bullet
+            self.player_bar.hp = self.player.life
+
+        for p in self.pnjs:
+            if p.map_x == self.map.case_x and p.map_y == self.map.case_y:
+                p.draw()
+                keyboard = pygame.key.get_pressed()
+                if keyboard[pygame.K_e] and p.rect.colliderect(self.player.rect):
+                    print("pnj détecté")
+
 
         for z in self.zombies:
             if z.life > 0:
@@ -175,8 +189,6 @@ class gameManager(Map):
                     if self.player.life < 1:
                         self.player.alive = 0 
 
-        
-    
         
         self.player_bar.draw()
         self.player.draw()

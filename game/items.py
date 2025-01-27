@@ -1,7 +1,7 @@
 import pygame
 
 class dropItems:
-    def __init__(self,screen,link,x,y,map_x,map_y,amount,name,scale=1):
+    def __init__(self,screen,link,x,y,map_x,map_y,amount,name,interval,scale=1):
         self.screen = screen
         self.name = name
         self.image = pygame.image.load(link)
@@ -15,6 +15,9 @@ class dropItems:
         self.amount = amount
         self.map_x = map_x
         self.map_y = map_y
+
+        self.last_damage_time = pygame.time.get_ticks()
+        self.damage_interval = interval
 
     def give_ammo_to(self,cible):
         cible.weapon_bullet += self.amount
