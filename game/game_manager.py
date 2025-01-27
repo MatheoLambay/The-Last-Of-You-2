@@ -53,8 +53,8 @@ class gameManager(Map):
     def open(self, screen):
         screen.fill((255,255,255))
         self.screen.blit(self.background,(0,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.jpg",100,100,0,0,"market",999,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.jpg",100,100,0,0,"vendeur",0,1))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.jpg",1920/2,1080/2,0,1,"market",999,0))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.jpg",1920/2,1080/2,0,1,"vendeur",0,1))
         
         
     def close(self):
@@ -112,6 +112,7 @@ class gameManager(Map):
         map_position = self.player.move(pygame.key.get_pressed(),self.border)
         self.player_bar.move(self.player.rect.bottomleft[0],self.player.rect.bottomleft[1])
 
+
         if map_position != None:
             self.background = self.map.switch_map(map_position)
             self.screen.blit(self.background,(0,0))
@@ -139,6 +140,7 @@ class gameManager(Map):
                 b.draw()
                 for z in self.zombies:
                     if( z.x - 20 <= b.x <= z.x + 20 and z.y - 20 <= b.y <= z.y + 20):
+                        
                         self.player.Attack(z)
                         
                         if z.life < 1:
@@ -150,6 +152,7 @@ class gameManager(Map):
                             
                             elif 30 <= drop <= 35:
                                 self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
+                        
                         self.bullet.pop(self.bullet.index(b))
                         break
 
@@ -205,14 +208,14 @@ class gameManager(Map):
                             self.player.x = p.rect.left - self.player.rect.width / 2
                         else:
                             self.player.x = p.rect.right + self.player.rect.width / 2
-                    else:  # Collision dominante sur l'axe vertical
+                    elif overlap_x > overlap_y:  # Collision dominante sur l'axe vertical
                         if self.player.rect.centery < p.rect.centery:
                             self.player.y = p.rect.top - self.player.rect.height / 2
                         else:
                             self.player.y = p.rect.bottom + self.player.rect.height / 2
 
                     self.player.rect.center = (self.player.x, self.player.y)
-                        
+                
                         
         for z in self.zombies:
             if z.life > 0:

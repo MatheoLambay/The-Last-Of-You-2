@@ -17,7 +17,9 @@ class Zombie(pygame.sprite.Sprite):
         self.y = y
         self.velocity = 0.5
         self.angle = 0
+
         self.gold = gold
+
         
 
 

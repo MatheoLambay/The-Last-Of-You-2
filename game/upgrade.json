@@ -3,9 +3,8 @@
 {
     "description":"increase life max",
     "link":"img/game/heal.webp",
-    "price": 400,
+    "price": 40,
     "amont": 3
-
 },
 "max_ammo" : 
 {
@@ -13,9 +12,21 @@
     "link":"img/game/iammo.webp",
     "price": 400,
     "amont": 100
-
+},
+"increase_damage" : 
+{
+    "description":"increase damage",
+    "link":"img/game/iammo.webp",
+    "price": 10,
+    "amont": 1
+},
+"increase_velocity" : 
+{
+    "description":"increase velocity",
+    "link":"img/game/iammo.webp",
+    "price": 10,
+    "amont": 1
 }
-
     
 
 }

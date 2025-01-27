@@ -4,7 +4,7 @@ from menu.main_menu import mainMenu
 
 
 pygame.init()
-
+pygame.font.init()
 menu_manager = menuManager()
 menu_manager.push_menu(mainMenu(menu_manager.screen))
 

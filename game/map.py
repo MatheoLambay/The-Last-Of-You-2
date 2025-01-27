@@ -15,6 +15,7 @@ class Map:
         
         
     def switch_map(self,direction):
+        
         if direction == "u" and self.case_y > self.min_case_y:
             self.case_y -= 1
         elif direction == "d" and self.case_y < self.max_case_y:

@@ -28,15 +28,15 @@ class shopMenu:
 
     def selectUpgrade(self):
         space = 0
-        for i in range(2):
+        for i in range(4):
             self.random_upgrade.append(random.choice(list(self.data)))
         
         """création des boutons et des images"""
         for i in self.random_upgrade:
             image = pygame.image.load(self.data[i]["link"]).convert_alpha()
             button = Button(self.screen,self.bg_rect.topright[0]+space,0,image,0.1)
-            space += 100
-            up = upgrade(self.data[i]["description"],self.data[i]["amont"])
+            space += 200
+            up = upgrade(self.data[i]["description"],self.data[i]["amont"],self.data[i]["price"])
             self.current_upgrade.append((button,up))
         
         
@@ -44,13 +44,25 @@ class shopMenu:
        
         backgroungrect = self.background_img.get_rect()
         backgroungrect.topright = (1920,0)
-        screen.blit(self.background_img, backgroungrect)        
+        screen.blit(self.background_img, backgroungrect)         
         self.back_button.draw()
         for i in self.current_upgrade:
             i[0].draw()
-        """afficher prix et nom"""
 
-       
+            text = pygame.font.Font('freesansbold.ttf', 20)
+
+            desc_text = text.render(str(i[1].name),True,(255,215,0))
+            descRect = desc_text.get_rect()
+            descRect.topleft = (i[0].rect.bottomleft[0],i[0].rect.bottomleft[1])
+
+            price_text = text.render(str(i[1].price),True,(255,0,0))
+            priceRect = price_text.get_rect()
+            priceRect.topleft = (descRect.bottomleft[0],descRect.bottomleft[1])
+
+            self.screen.blit(price_text, priceRect)
+            self.screen.blit(desc_text, descRect)
+
+
     def close(self):
         pass
 
@@ -64,6 +76,9 @@ class shopMenu:
 
         for i in self.current_upgrade:
             if i[0].detect():
-                i[1].apply(self.player)
-            """checker total gold"""
+                if self.player.gold >= i[1].price:
+                    i[1].apply(self.player)
+                else:
+                    print('no money')
+            
             

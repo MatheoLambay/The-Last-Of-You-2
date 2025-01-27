@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Player:
-    def __init__(self,screen,link,x,y,life,attack,score=0):
+    def __init__(self,screen,link,x,y,life,attack):
         self.screen = screen
 
         self.original_image = pygame.image.load(link)
@@ -19,17 +19,15 @@ class Player:
 
         self.attack = attack
         self.attack_speed = 1
-        self.score = score
         self.velocity = 2
         self.weapon_bullet_max = 100
         self.weapon_bullet = self.weapon_bullet_max
         self.alive = 1
-        self.collision = []
         self.direction = None
         self.can_attack = 1
         self.gold = 0
-        
-        
+
+    
          
     def point_at(self, m_pos):
         if self.alive:
@@ -52,21 +50,19 @@ class Player:
     def move(self,key,border):
     
         if self.alive:
-            
             if key[pygame.K_z]:
                 self.direction = "u"
                 if self.y > 0:
                     self.y -= 1 * self.velocity
-                elif self.y == 0 and border["up"]:
+                elif self.y <= 0 and border["up"]:
                     self.y = 1080
                     return "u"
                     
-                
             if key[pygame.K_s]:
                 self.direction = "d"
                 if self.y < 1080:
                     self.y += 1 * self.velocity
-                elif self.y == 1080 and border["down"]:
+                elif self.y >= 1080 and border["down"]:
                     self.y = 0
                     return "d"
 
@@ -74,7 +70,7 @@ class Player:
                 self.direction = "r"
                 if self.x < 1920:
                     self.x += 1 * self.velocity
-                elif self.x == 1920 and border["right"]:
+                elif self.x >= 1920 and border["right"]:
                     self.x = 0
                     return "r"
             
@@ -82,7 +78,7 @@ class Player:
                 self.direction = "l"
                 if self.x > 0:
                     self.x -= 1 * self.velocity
-                elif self.x == 0 and border["left"]:
+                elif self.x <= 0 and border["left"]:
                     self.x = 1920
                     return "l"
             

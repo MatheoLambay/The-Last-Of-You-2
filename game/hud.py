@@ -19,7 +19,6 @@ class Hud:
     def draw(self):
         ratio = self.hp / self.max_hp
 
-        pygame.font.init()
         ammo = pygame.font.Font('freesansbold.ttf', 32)
         ammo_text = ammo.render(str(self.ammo),True,(0,0,0))
         textRect = ammo_text.get_rect()
