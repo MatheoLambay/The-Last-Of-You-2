@@ -1,21 +1,22 @@
 import pygame
 
 class upgrade:
-    def __init__(self,name,amount,price):
+    def __init__(self,name,description,amount,price):
         
         self.name = name
+        self.description = description
         self.amount = amount
         self.price = price
 
     def apply(self,cible):
         
-        if self.name == "increase max ammo":
+        if self.name == "max_ammo":
             cible.weapon_bullet_max += self.amount
-        elif self.name == "increase life max":
+        elif self.name == "max_life":
             cible.life_max += self.amount
-        elif self.name == "increase damage":
+        elif self.name == "increase_damage":
             cible.attack += self.amount
-        elif self.name == "increase velocity":
+        elif self.name == "increase_velocity":
             cible.velocity += self.amount
         
         

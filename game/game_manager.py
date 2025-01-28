@@ -18,7 +18,7 @@ class gameManager(Map):
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
 
-        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.gold)
+        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.gold)
 
         self.map1 = pygame.image.load("img\game\map1.png").convert_alpha()
         self.map2 = pygame.image.load("img\game\map2.png").convert_alpha()
@@ -48,13 +48,13 @@ class gameManager(Map):
         self.damage_interval = 2000
 
         self.market_button = 0
-
-        """mettre dans class joueur"""
-        self.player_in_market = 0        
+        self.player_in_safezone = 0
+        
+              
 
         
-        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.jpg",1920/2,1080/2,0,1,"market",999,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.jpg",1920/2,1080/2,0,1,"vendeur",0,1))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",999,0))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.png",1920/2,1080/2,0,1,"vendeur",0,1))
         
     
     def open(self, screen):
@@ -91,7 +91,7 @@ class gameManager(Map):
 
 
         """spawn zombie"""
-        if current_time - self.last_zombie_time >= self.zombie_interval:
+        if current_time - self.last_zombie_time >= self.zombie_interval and not(self.player_in_safezone):
             if(random.randint(0,1)):
                 if(random.randint(0,1)):
                     spawn_position_x = random.randint(0,1920)
@@ -175,8 +175,9 @@ class gameManager(Map):
 
         for z in self.zombies:
             if z.life > 0:
-                z.point_at((self.player.x,self.player.y))
-                z.move_to(self.player.x,self.player.y)
+                if not(self.player_in_safezone):
+                    z.point_at((self.player.x,self.player.y))
+                    z.move_to(self.player.x,self.player.y)
                 if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
                     z.draw()
             else:
@@ -193,22 +194,20 @@ class gameManager(Map):
 
 
         self.player.can_attack = 1
+        self.player_in_safezone = 0
         for p in self.pnjs:
             
             if p.map_x == self.map.case_x and p.map_y == self.map.case_y:
-                if self.player_in_market == 0:
+                if self.player.player_in_market == 0:
                     p.draw()
-
-                for z in self.zombies:
-                    if  z.rect.colliderect(p.rect):
-                        p.Attack(z)
 
                 keyboard = pygame.key.get_pressed()
                 if p.rect.colliderect(self.player.rect):
+                    self.player_in_safezone = 1
                     self.player.can_attack = 0
                     key = keyboard[pygame.K_e]
                     if key and self.market_button == 0:
-                        self.player_in_market = 1
+                        self.player.player_in_market = 1
                         from game.shop import shopMenu
                         manager.push_menu(shopMenu(self.screen,self.player))
                         
@@ -236,12 +235,13 @@ class gameManager(Map):
                     self.player.rect.center = (self.player.x, self.player.y)
                 
                         
-        
-        self.player_bar.gold = self.player.gold
-        self.player_bar.ammo = self.player.weapon_bullet
-        self.player_bar.hp = self.player.life
-        self.player_bar.max_hp = self.player.life_max
-        
-        self.player_bar.draw()
-        self.player.draw()
+        if not(self.player.player_in_market):
+            self.player_bar.gold = self.player.gold
+            self.player_bar.ammo = self.player.weapon_bullet
+            self.player_bar.max_ammo = self.player.weapon_bullet_max
+            self.player_bar.hp = self.player.life
+            self.player_bar.max_hp = self.player.life_max
+            
+            self.player_bar.draw()
+            self.player.draw()
        

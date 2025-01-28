@@ -6,3 +6,8 @@
         # screen.blit(title_text, textRect)
 
 #i.rect.colliderect(self.player.rect)
+
+
+for i in range(15):
+    if i%5 == 0:
+        print(i)

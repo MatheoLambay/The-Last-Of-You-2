@@ -26,6 +26,8 @@ class Player:
         self.direction = None
         self.can_attack = 1
         self.gold = 0
+        self.player_in_market = 0  
+
 
     
          
@@ -48,7 +50,6 @@ class Player:
 
     
     def move(self,key,border):
-        print(self.x,self.y)
         if self.alive:
             if key[pygame.K_z]:
                 self.direction = "u"

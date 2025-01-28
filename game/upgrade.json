@@ -1,6 +1,7 @@
 {
 "max_life" : 
 {
+    "name": "max_life",
     "description":"increase life max",
     "link":"img/game/heal.png",
     "price": 40,
@@ -8,21 +9,24 @@
 },
 "max_ammo" : 
 {
-    "description":"increase max ammo",
+    "name": "max_ammo",
+    "description":"incr max ammo",
     "link":"img/game/iammo.webp",
-    "price": 400,
+    "price": 10,
     "amont": 100
 },
 "increase_damage" : 
 {
-    "description":"increase damage",
+    "name": "increase_damage",
+    "description":"incr damage",
     "link":"img/game/iammo.webp",
     "price": 10,
     "amont": 1
 },
 "increase_velocity" : 
 {
-    "description":"increase velocity",
+    "name": "increase_velocity",
+    "description":"incr velocity",
     "link":"img/game/iammo.webp",
     "price": 10,
     "amont": 1
