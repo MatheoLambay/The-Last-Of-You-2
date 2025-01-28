@@ -49,12 +49,10 @@ class gameManager(Map):
 
         self.market_button = 0
         self.player_in_safezone = 0
-        
-              
 
         
         self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",999,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.png",1920/2,1080/2,0,1,"vendeur",0,1))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
         
     
     def open(self, screen):
@@ -107,8 +105,14 @@ class gameManager(Map):
                     spawn_position_x = 1920
                     spawn_position_y = random.randint(0,1080)
 
-            self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",spawn_position_x,spawn_position_y,3,1,10))
+            if self.player.score == 1:
+                self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",spawn_position_x,spawn_position_y,3,1,10,5))
+            else:
+                self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",spawn_position_x,spawn_position_y,3,1,10,0.5))
+            """icicicicicicicicicicicicicicicicicicic"""
             self.last_zombie_time = current_time
+
+
             
         """player move, hud"""
         map_position = self.player.move(pygame.key.get_pressed(),self.border)
@@ -148,6 +152,7 @@ class gameManager(Map):
                         if z.life < 1:
                             """zombie drop"""
                             z.drop_gold(self.player)
+                            self.player.score += 1
                             drop = random.randint(1,100)
                             if 1 <= drop <= 30:
                                 self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",5000,0.1))
@@ -234,7 +239,7 @@ class gameManager(Map):
 
                     self.player.rect.center = (self.player.x, self.player.y)
                 
-                        
+        print(self.player.score)           
         if not(self.player.player_in_market):
             self.player_bar.gold = self.player.gold
             self.player_bar.ammo = self.player.weapon_bullet
