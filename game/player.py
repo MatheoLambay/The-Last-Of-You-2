@@ -48,7 +48,7 @@ class Player:
 
     
     def move(self,key,border):
-    
+        print(self.x,self.y)
         if self.alive:
             if key[pygame.K_z]:
                 self.direction = "u"

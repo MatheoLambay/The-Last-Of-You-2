@@ -10,11 +10,15 @@ class shopMenu:
         self.screen = screen
         self.player = player
 
-        self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         
+
         self.background_img = pygame.image.load("img\game\shopbackgorund.jpg").convert_alpha()
-        self.back_button = Button(self.screen,1800,0,self.back_img,0.8)
         self.bg_rect = self.background_img.get_rect()
+        self.bg_rect.center = (1920/2,1080/2)
+
+        self.back_img = pygame.image.load("img\settings_menu\goback_btn.png")
+        self.back_button = Button(self.screen,self.bg_rect.bottomright[0],self.bg_rect.bottomright[1],self.back_img,0.8,"bottomright")
+        
 
         self.random_upgrade = []
         self.current_upgrade = []
@@ -34,17 +38,17 @@ class shopMenu:
         """création des boutons et des images"""
         for i in self.random_upgrade:
             image = pygame.image.load(self.data[i]["link"]).convert_alpha()
-            button = Button(self.screen,self.bg_rect.topright[0]+space,0,image,0.1)
+            button = Button(self.screen,self.bg_rect.topleft[0]+space,self.bg_rect.topleft[1],image,0.1)
             space += 200
             up = upgrade(self.data[i]["description"],self.data[i]["amont"],self.data[i]["price"])
             self.current_upgrade.append((button,up))
         
         
     def open(self, screen):
-       
-        backgroungrect = self.background_img.get_rect()
-        backgroungrect.topright = (1920,0)
-        screen.blit(self.background_img, backgroungrect)         
+        
+    
+        screen.blit(self.background_img, self.bg_rect)  
+
         self.back_button.draw()
         for i in self.current_upgrade:
             i[0].draw()
@@ -68,7 +72,9 @@ class shopMenu:
 
 
     def update(self, event, manager):
+         
         
+
         """Met à jour les interactions du menu."""
         if self.back_button.detect():
            

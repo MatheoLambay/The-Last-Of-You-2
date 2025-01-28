@@ -49,25 +49,27 @@ class gameManager(Map):
 
         self.market_button = 0
 
+        """mettre dans class joueur"""
+        self.player_in_market = 0        
+
+        
+        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.jpg",1920/2,1080/2,0,1,"market",999,0))
+        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.jpg",1920/2,1080/2,0,1,"vendeur",0,1))
+        
     
     def open(self, screen):
         screen.fill((255,255,255))
         self.screen.blit(self.background,(0,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.jpg",1920/2,1080/2,0,1,"market",999,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.jpg",1920/2,1080/2,0,1,"vendeur",0,1))
+        
         
         
     def close(self):
-        self.bullet = []
-        self.zombies = []
-        self.items = []
+        pass
 
     def update(self, event, manager):
-        
-
+       
         self.screen.fill((255,255,255))
         
-    
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()
 
@@ -151,7 +153,7 @@ class gameManager(Map):
                                 self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",5000,0.1))
                             
                             elif 30 <= drop <= 35:
-                                self.items.append(dropItems(self.screen,"img\game\heal.webp",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
+                                self.items.append(dropItems(self.screen,"img\game\heal.png",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
                         
                         self.bullet.pop(self.bullet.index(b))
                         break
@@ -171,14 +173,31 @@ class gameManager(Map):
             elif(current_time - i.damage_interval >= i.last_damage_time):
                 self.items.pop(self.items.index(i))
 
-            
+        for z in self.zombies:
+            if z.life > 0:
+                z.point_at((self.player.x,self.player.y))
+                z.move_to(self.player.x,self.player.y)
+                if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
+                    z.draw()
+            else:
+                self.zombies.pop(self.zombies.index(z))
+
+            if(self.player.x-20 <= z.x <= self.player.x+20 and self.player.y-20 <= z.y <= self.player.y+20)   : 
+                current_time = pygame.time.get_ticks()
+                if current_time - self.last_damage_time >= self.damage_interval:
+                    z.Attack(self.player)
+                    
+                    self.last_damage_time = current_time
+                    if self.player.life < 1:
+                        self.player.alive = 0             
 
 
         self.player.can_attack = 1
         for p in self.pnjs:
             
             if p.map_x == self.map.case_x and p.map_y == self.map.case_y:
-                p.draw()
+                if self.player_in_market == 0:
+                    p.draw()
 
                 for z in self.zombies:
                     if  z.rect.colliderect(p.rect):
@@ -189,7 +208,7 @@ class gameManager(Map):
                     self.player.can_attack = 0
                     key = keyboard[pygame.K_e]
                     if key and self.market_button == 0:
-                        
+                        self.player_in_market = 1
                         from game.shop import shopMenu
                         manager.push_menu(shopMenu(self.screen,self.player))
                         
@@ -217,24 +236,6 @@ class gameManager(Map):
                     self.player.rect.center = (self.player.x, self.player.y)
                 
                         
-        for z in self.zombies:
-            if z.life > 0:
-                z.point_at((self.player.x,self.player.y))
-                z.move_to(self.player.x,self.player.y)
-                if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
-                    z.draw()
-            else:
-                self.zombies.pop(self.zombies.index(z))
-
-            if(self.player.x-20 <= z.x <= self.player.x+20 and self.player.y-20 <= z.y <= self.player.y+20)   : 
-                current_time = pygame.time.get_ticks()
-                if current_time - self.last_damage_time >= self.damage_interval:
-                    z.Attack(self.player)
-                    
-                    self.last_damage_time = current_time
-                    if self.player.life < 1:
-                        self.player.alive = 0 
-
         
         self.player_bar.gold = self.player.gold
         self.player_bar.ammo = self.player.weapon_bullet

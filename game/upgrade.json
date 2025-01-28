@@ -2,7 +2,7 @@
 "max_life" : 
 {
     "description":"increase life max",
-    "link":"img/game/heal.webp",
+    "link":"img/game/heal.png",
     "price": 40,
     "amont": 3
 },
