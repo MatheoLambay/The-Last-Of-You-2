@@ -1,0 +1,53 @@
+{
+    "zombie_vert_1" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/greendead1.png",
+        "gold": 10,
+        "amont": 3,
+        "velocity": 0.5,
+        "rate": 100,
+        "min_score": 0,
+        "scale": 1 
+        
+    },
+    "zombie_vert_2" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/greendead2.png",
+        "gold": 10,
+        "amont": 3,
+        "velocity": 0.5,
+        "rate": 90,
+        "min_score": 0,
+        "scale": 1 
+    },
+    "zombie_vert_3" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/greendead3.png",
+        "gold": 10,
+        "amont": 3,
+        "velocity": 0.5,
+        "rate": 80,
+        "min_score": 0,
+        "scale": 1
+    },
+    "zombie_rouge" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/reddead_haut.png",
+        "gold": 10,
+        "amont": 3,
+        "velocity": 0.5,
+        "rate": 10,
+        "min_score": 100,
+        "scale": 0.5 
+    }
+        
+    
+    }

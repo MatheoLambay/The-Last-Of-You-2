@@ -1,5 +1,6 @@
 import pygame
 import random
+import json
 from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
@@ -32,6 +33,10 @@ class gameManager(Map):
 
         self.map = Map(screen,(((self.map1),(self.map2),(self.map3)),((self.map4),(self.map5),(self.map6)),((self.map7),(self.map8),(self.map9))))
         self.border = self.map.map_border()
+
+        with open("game/zombie.json", 'r') as f:
+            self.zombies_pattern = json.load(f)
+       
 
         self.bullet = []
         self.zombies = []
@@ -105,12 +110,34 @@ class gameManager(Map):
                     spawn_position_x = 1920
                     spawn_position_y = random.randint(0,1080)
 
-            if self.player.score == 1:
-                self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",spawn_position_x,spawn_position_y,3,1,10,5))
-            else:
-                self.zombies.append(Zombie(self.screen,"img\game\zombie\greendead_haut.png",spawn_position_x,spawn_position_y,3,1,10,0.5))
-            """icicicicicicicicicicicicicicicicicicic"""
-            self.last_zombie_time = current_time
+
+            spawn_percent = random.randint(0,100)
+            new_zombies_pattern = list(self.zombies_pattern.keys())
+          
+            zombie_not_selected = 1
+
+            while zombie_not_selected:
+                
+                random_zombie = random.choice(new_zombies_pattern)
+
+                if self.zombies_pattern[random_zombie]["rate"] >= spawn_percent and self.zombies_pattern[random_zombie]["min_score"] <= self.player.score: 
+                    print("spawn")
+                    link = self.zombies_pattern[random_zombie]["link"]
+                    life = self.zombies_pattern[random_zombie]["life"]
+                    attack = self.zombies_pattern[random_zombie]["attack"]
+                    gold = self.zombies_pattern[random_zombie]["gold"]
+                    velocity = self.zombies_pattern[random_zombie]["velocity"]
+                    scale = self.zombies_pattern[random_zombie]["scale"]
+                    self.zombies.append(Zombie(self.screen,link,spawn_position_x,spawn_position_y,life,attack,gold,velocity,scale))
+                    zombie_not_selected = 0
+
+                else:
+                    new_zombies_pattern.pop(new_zombies_pattern.index(random_zombie))
+                
+            self.last_zombie_time = current_time 
+                
+
+            
 
 
             
@@ -239,7 +266,7 @@ class gameManager(Map):
 
                     self.player.rect.center = (self.player.x, self.player.y)
                 
-        print(self.player.score)           
+                  
         if not(self.player.player_in_market):
             self.player_bar.gold = self.player.gold
             self.player_bar.ammo = self.player.weapon_bullet
