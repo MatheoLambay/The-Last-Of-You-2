@@ -10,8 +10,11 @@ class mainMenu:
         self.settings_img = pygame.image.load("img\main_menu\settings_btn.png").convert_alpha()
         self.background_img = pygame.image.load("img\main_menu\mbackground.png").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
+        self.stat_img = pygame.image.load("img\main_menu\stat_btn.png").convert_alpha()
+
         self.start_button = Button(self.screen,1920/100,300,self.start_img)
-        self.settings_button = Button(self.screen,1920/100,450,self.settings_img)
+        self.settings_button = Button(self.screen,1920/100,600,self.settings_img)
+        self.stat_button = Button(self.screen,1920/100,450,self.stat_img)
         self.exit_button = Button(self.screen,20,900,self.exit_img,0.8)
         
 
@@ -43,17 +46,15 @@ class mainMenu:
 
         self.start_button.draw()
         self.settings_button.draw()
+        self.stat_button.draw()
         self.exit_button.draw()
+
             
 
     def close(self):
         pass
 
     def update(self, event, manager):
-        
-        # """Met à jour les interactions du menu."""
-        
-
         if self.exit_button.detect():
             pygame.quit()
             quit()
@@ -63,7 +64,13 @@ class mainMenu:
             self.fade(manager.screen,1920,1080)
             manager.push_menu(settingsMenu(self.screen))
 
+        if self.stat_button.detect():
+            from menu.stat_menu import statMenu
+            self.fade(manager.screen,1920,1080)
+            manager.push_menu(statMenu(self.screen))
+
         if self.start_button.detect():
             self.fade(manager.screen,1920,1080)
             from menu.select_menu import selectModeMenu
             manager.push_menu(selectModeMenu(self.screen))
+        

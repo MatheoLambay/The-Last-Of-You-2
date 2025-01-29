@@ -1,6 +1,7 @@
 import pygame
 import random
 import json
+
 from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
@@ -15,6 +16,14 @@ class gameManager(Map):
    
     def __init__(self,screen):
         self.screen = screen
+
+        with open("game/zombie.json", 'r') as f:
+            self.zombies_pattern = json.load(f)
+
+        with open('menu/stat.json', 'r') as s:
+            self.stat_player = json.load(s)
+        
+
         self.background = pygame.image.load("img\game\map5.png").convert_alpha()
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
@@ -34,9 +43,8 @@ class gameManager(Map):
         self.map = Map(screen,(((self.map1),(self.map2),(self.map3)),((self.map4),(self.map5),(self.map6)),((self.map7),(self.map8),(self.map9))))
         self.border = self.map.map_border()
 
-        with open("game/zombie.json", 'r') as f:
-            self.zombies_pattern = json.load(f)
-       
+        
+            
 
         self.bullet = []
         self.zombies = []
@@ -121,7 +129,6 @@ class gameManager(Map):
                 random_zombie = random.choice(new_zombies_pattern)
 
                 if self.zombies_pattern[random_zombie]["rate"] >= spawn_percent and self.zombies_pattern[random_zombie]["min_score"] <= self.player.score: 
-                    print("spawn")
                     link = self.zombies_pattern[random_zombie]["link"]
                     life = self.zombies_pattern[random_zombie]["life"]
                     attack = self.zombies_pattern[random_zombie]["attack"]
@@ -179,7 +186,11 @@ class gameManager(Map):
                         if z.life < 1:
                             """zombie drop"""
                             z.drop_gold(self.player)
+                            self.stat_player["dead killed"] += 1
+                            self.stat_player["total gold"] += z.gold
+                            
                             self.player.score += 1
+                            
                             drop = random.randint(1,100)
                             if 1 <= drop <= 30:
                                 self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",5000,0.1))
@@ -222,7 +233,14 @@ class gameManager(Map):
                     
                     self.last_damage_time = current_time
                     if self.player.life < 1:
-                        self.player.alive = 0             
+                        """joueur mort"""
+                        self.player.alive = 0  
+
+                        print('mort')
+                        with open("menu\stat.json", 'w') as w:
+                            json.dump(self.stat_player,w)
+
+
 
 
         self.player.can_attack = 1
