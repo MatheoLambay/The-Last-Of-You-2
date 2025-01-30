@@ -9,6 +9,7 @@ from game.bullet import Bullet
 from game.hud import Hud
 from game.pnj import SellerPnj
 from game.items import *
+from button import Button
 
 
 
@@ -28,6 +29,9 @@ class gameManager(Map):
 
         self.death_img = pygame.image.load("img\game\gameover.png").convert_alpha()
         self.deat_rect = self.death_img.get_rect().center =(1920/2,1080/2) 
+
+        self.end_img = pygame.image.load("img\main_menu\start_btn_upper.png").convert_alpha()
+        self.end_btn = Button(screen,1920//2,1080//2,self.end_img)
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
 
@@ -137,10 +141,11 @@ class gameManager(Map):
             
         else:
             self.screen.blit(self.death_img,self.deat_rect)
-            print('mort')
-            with open("menu\stat.json", 'w') as w:
-                json.dump(self.stat_player,w)
-
+            self.end_btn.draw()
+            if self.end_btn.detect():
+                from menu.settings_menu import settingsMenu
+                manager.push_menu(settingsMenu(self.screen))
+            
 
     def draw_update_player_hud(self):
     
@@ -169,7 +174,6 @@ class gameManager(Map):
             else:
                 spawn_position_x = 1920
                 spawn_position_y = random.randint(0,1080)
-
 
         spawn_percent = random.randint(0,100)
         new_zombies_pattern = list(self.zombies_pattern.keys())
@@ -306,4 +310,6 @@ class gameManager(Map):
                     self.last_damage_time = current_time
                     if self.player.life < 1:
                         """joueur mort"""
+                        with open("menu\stat.json", 'w') as w:
+                            json.dump(self.stat_player,w)
                         self.player.alive = 0  
