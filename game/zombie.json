@@ -1,6 +1,7 @@
 {
     "zombie_vert_1" : 
     {
+        "name": "greendead",
         "attack": 1,
         "life": 1,
         "link":"img/game/zombie/greendead1.png",
@@ -13,6 +14,7 @@
     },
     "zombie_vert_2" : 
     {
+        "name": "greendead",
         "attack": 1,
         "life": 1,
         "link":"img/game/zombie/greendead2.png",
@@ -24,6 +26,7 @@
     },
     "zombie_vert_3" : 
     {
+        "name": "greendead",
         "attack": 1,
         "life": 1,
         "link":"img/game/zombie/greendead3.png",
@@ -35,6 +38,7 @@
     },
     "zombie_bleu_1" : 
     {
+        "name": "bluedead",
         "attack": 1,
         "life": 2,
         "link":"img/game/zombie/bluedead1.png",
@@ -46,6 +50,7 @@
     },
     "zombie_bleu_2" : 
     {
+        "name": "bluedead",
         "attack": 1,
         "life": 2,
         "link":"img/game/zombie/bluedead2.png",
@@ -57,6 +62,7 @@
     },
     "zombie_bleu_3" : 
     {
+        "name": "bluedead",
         "attack": 1,
         "life": 2,
         "link":"img/game/zombie/bluedead3.png",
@@ -68,6 +74,7 @@
     },
     "zombie_red_1" : 
     {
+        "name": "reddead",
         "attack": 1,
         "life": 3,
         "link":"img/game/zombie/reddead1.png",
@@ -79,6 +86,7 @@
     },
     "zombie_red_2" : 
     {
+        "name": "reddead",
         "attack": 1,
         "life": 3,
         "link":"img/game/zombie/reddead2.png",
@@ -90,6 +98,7 @@
     },
     "zombie_red_3" : 
     {
+        "name": "reddead",
         "attack": 1,
         "life": 3,
         "link":"img/game/zombie/reddead3.png",

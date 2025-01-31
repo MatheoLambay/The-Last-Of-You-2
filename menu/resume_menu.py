@@ -2,12 +2,11 @@ import pygame
 from button import Button
 
 class resumeMenu:
-    def __init__(self,screen,total_killed,total_time,total_gold,upgrade):
+    def __init__(self,screen,zombie_killed,total_time,total_gold,upgrade):
         self.screen = screen
         self.title_img = pygame.image.load("img/resume_menu/resume.png").convert_alpha()
         self.title_rect = self.title_img.get_rect()
 
-        
         self.background_img = pygame.image.load("img/resume_menu/background.webp").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
         self.background_rect = self.background_img.get_rect()
@@ -21,7 +20,13 @@ class resumeMenu:
         self.upgrade_img = pygame.image.load("img/resume_menu/upgrade.png").convert_alpha()
         self.upgrade_rect = self.upgrade_img.get_rect()
 
-        self.stat = {"total killed":total_killed,"total time":total_time,"total gold":total_gold}
+        self.stat = {"total time":total_time,"total gold":total_gold}
+        self.total_killed = 0
+        for i,j in zombie_killed.items():
+            self.stat[i] = j
+            self.total_killed += j
+        self.stat["total killed"] = self.total_killed
+        
         self.upgrade = upgrade
 
         self.last_stat = self.divers_rect
@@ -58,7 +63,7 @@ class resumeMenu:
         screen.blit(self.upgrade_img, self.upgrade_rect)
 
         
-        data_font = pygame.font.Font('freesansbold.ttf', 32)
+        data_font = pygame.font.Font('The Last Of Us Rough.ttf', 32)
 
         for i,j in self.stat.items():
             text = "%s : %i"%(i,j)
@@ -68,8 +73,9 @@ class resumeMenu:
             self.screen.blit(data_text, textRect)
             self.last_stat = textRect
             
-        for i in self.upgrade:
-            data_text = data_font.render(str(i),True,(255,255,255))
+        for i,j in self.upgrade.items():
+            text = "%s : %ix"%(i,j)
+            data_text = data_font.render(text,True,(255,255,255))
             textRect = data_text.get_rect()
             textRect.topleft = (self.last_upgrade.bottomleft[0],self.last_upgrade.bottomleft[1])
             self.screen.blit(data_text, textRect)

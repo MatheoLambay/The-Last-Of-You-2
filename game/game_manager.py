@@ -68,9 +68,8 @@ class gameManager(Map):
         self.play_interval = 1000
 
         self.time_played = 0
-        self.zombie_killed = 0
+        self.zombie_killed = {"greendead":0,"bluedead":0,"reddead":0}
         
-
         self.market_button = 0
         self.player_in_safezone = 0
 
@@ -115,7 +114,7 @@ class gameManager(Map):
 
             """spawn zombie"""
             if current_time - self.last_zombie_time >= self.zombie_interval and not(self.player_in_safezone):
-                self.zombie_spawn()
+                self.new_zombie()
                 self.last_zombie_time = current_time 
                     
             """player move, hud"""
@@ -176,7 +175,7 @@ class gameManager(Map):
         self.player.draw()
 
 
-    def zombie_spawn(self):
+    def new_zombie(self):
         if(random.randint(0,1)):
             if(random.randint(0,1)):
                 spawn_position_x = random.randint(0,1920)
@@ -202,13 +201,14 @@ class gameManager(Map):
             random_zombie = random.choice(new_zombies_pattern)
 
             if self.zombies_pattern[random_zombie]["rate"] >= spawn_percent and self.zombies_pattern[random_zombie]["min_score"] <= self.player.score: 
+                name = self.zombies_pattern[random_zombie]["name"]
                 link = self.zombies_pattern[random_zombie]["link"]
                 life = self.zombies_pattern[random_zombie]["life"]
                 attack = self.zombies_pattern[random_zombie]["attack"]
                 gold = self.zombies_pattern[random_zombie]["gold"]
                 velocity = self.zombies_pattern[random_zombie]["velocity"]
                 scale = self.zombies_pattern[random_zombie]["scale"]
-                self.zombies.append(Zombie(self.screen,link,spawn_position_x,spawn_position_y,life,attack,gold,velocity,scale))
+                self.zombies.append(Zombie(self.screen,link,spawn_position_x,spawn_position_y,name,life,attack,gold,velocity,scale))
                 zombie_not_selected = 0
 
             else:
@@ -240,7 +240,9 @@ class gameManager(Map):
                             z.drop_gold(self.player)
                             self.stat_player["dead killed"] += 1
                             self.stat_player["total gold"] += z.gold
-                            self.zombie_killed +=1
+                            self.stat_player[z.name] += 1
+                            self.zombie_killed[z.name] +=1
+
                             self.player.score += 10
                             
                             drop = random.randint(1,100)

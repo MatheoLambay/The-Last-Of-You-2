@@ -28,7 +28,7 @@ class Player:
         self.gold = 0
         self.score = 0
         self.player_in_market = 0  
-        self.current_upgrade = []
+        self.current_upgrade = {}
 
 
     

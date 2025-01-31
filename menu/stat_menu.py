@@ -12,6 +12,8 @@ class statMenu:
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.back_button = Button(self.screen,20,900,self.back_img,0.8)
 
+        self.last_stat = self.statrect.bottomleft
+
         with open('menu\stat.json','r') as f:
             self.data = json.load(f)
             print(self.data)
@@ -35,14 +37,14 @@ class statMenu:
         screen.fill((0,0,0))
 
         screen.blit(self.stat_img, self.statrect)
-        space = 0
+       
         for i,j in self.data.items():
-            data_font = pygame.font.Font('freesansbold.ttf', 16)
+            data_font = pygame.font.Font('The Last Of Us Rough.ttf', 30)
             text = "%s : %i"%(i,j)
             data_text = data_font.render(text,True,(255,255,255))
             textRect = data_text.get_rect()
-            textRect.topleft = (0,self.statrect.bottomleft[1]+space)
-            space += 15
+            textRect.topleft = (self.last_stat[0],self.last_stat[1])
+            self.last_stat = textRect.bottomleft
             self.screen.blit(data_text, textRect)
         
         
