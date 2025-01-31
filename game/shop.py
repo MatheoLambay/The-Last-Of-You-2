@@ -89,6 +89,7 @@ class shopMenu:
             if i[0].detect():
                 if self.player.gold >= i[1].price:
                     i[1].apply(self.player)
+                    self.player.current_upgrade.append(i[1].name)
                     self.player.gold -= i[1].price
                 else:
                     print('no money')

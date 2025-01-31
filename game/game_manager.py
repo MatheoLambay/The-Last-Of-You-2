@@ -33,7 +33,7 @@ class gameManager(Map):
         self.end_img = pygame.image.load("img\main_menu\start_btn_upper.png").convert_alpha()
         self.end_btn = Button(screen,1920//2,1080//2,self.end_img)
 
-        self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
+        self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,1,1)
 
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.gold)
 
@@ -64,8 +64,18 @@ class gameManager(Map):
         self.last_damage_time = 0
         self.damage_interval = 2000
 
+        self.last_play_time = 0
+        self.play_interval = 1000
+
+        self.time_played = 0
+        self.zombie_killed = 0
+        
+
         self.market_button = 0
         self.player_in_safezone = 0
+
+
+
 
         self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",999,0))
         self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
@@ -90,6 +100,11 @@ class gameManager(Map):
             self.player.point_at(mouse_pos)
             
             current_time = pygame.time.get_ticks()
+
+            """time played"""
+            if current_time - self.last_play_time >= self.play_interval:
+                self.time_played +=1
+                self.last_play_time = current_time
         
             """spawn bullet"""
             mouse_click = pygame.mouse.get_pressed()
@@ -126,13 +141,15 @@ class gameManager(Map):
 
             """update bullets in list"""
             self.bullets_management()
+
             """update items in list"""
             self.items_management()
-
             self.player.can_attack = 1
             self.player_in_safezone = 0
+
             """update pnj interaction"""
             self.pnjs_management(manager)
+
             """udpate zombies in list"""
             self.zombies_management()
             
@@ -143,8 +160,8 @@ class gameManager(Map):
             self.screen.blit(self.death_img,self.deat_rect)
             self.end_btn.draw()
             if self.end_btn.detect():
-                from menu.settings_menu import settingsMenu
-                manager.push_menu(settingsMenu(self.screen))
+                from menu.resume_menu import resumeMenu
+                manager.push_menu(resumeMenu(self.screen,self.zombie_killed,self.time_played,self.player.gold,self.player.current_upgrade))
             
 
     def draw_update_player_hud(self):
@@ -223,7 +240,7 @@ class gameManager(Map):
                             z.drop_gold(self.player)
                             self.stat_player["dead killed"] += 1
                             self.stat_player["total gold"] += z.gold
-                            
+                            self.zombie_killed +=1
                             self.player.score += 10
                             
                             drop = random.randint(1,100)
