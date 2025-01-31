@@ -28,5 +28,15 @@
         "gold": 40,
         "velocity": 0.4,
         "min_score": 200
+    },
+    "zombie_jaune" : 
+    {
+        "name": "yellowdead",
+        "attack": 2,
+        "life": 1,
+        "link":"img/codex_menu/yellowdead.jpg",
+        "gold": 80,
+        "velocity": 1,
+        "min_score": 300
     }
 }
