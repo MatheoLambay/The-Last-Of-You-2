@@ -19,7 +19,7 @@
 {
     "name": "increase_damage",
     "description":"incr damage",
-    "link":"img/game/iammo.webp",
+    "link":"img/game/damage.png",
     "price": 10,
     "amont": 1
 },
@@ -27,7 +27,7 @@
 {
     "name": "increase_velocity",
     "description":"incr velocity",
-    "link":"img/game/iammo.webp",
+    "link":"img/game/velocity.png",
     "price": 10,
     "amont": 1
 }
