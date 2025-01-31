@@ -14,7 +14,7 @@ class statMenu:
 
         self.last_stat = self.statrect.bottomleft
 
-        with open('menu\stat.json','r') as f:
+        with open('data\stat.json','r') as f:
             self.data = json.load(f)
             print(self.data)
 

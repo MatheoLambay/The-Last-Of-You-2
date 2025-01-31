@@ -18,13 +18,12 @@ class gameManager(Map):
     def __init__(self,screen):
         self.screen = screen
 
-        with open("game/zombie.json", 'r') as f:
+        with open("data\zombie.json", 'r') as f:
             self.zombies_pattern = json.load(f)
 
-        with open('menu/stat.json', 'r') as s:
+        with open('data\stat.json', 'r') as s:
             self.stat_player = json.load(s)
         
-
         self.background = pygame.image.load("img\game\map5.png").convert_alpha()
 
         self.death_img = pygame.image.load("img\game\gameover.png").convert_alpha()

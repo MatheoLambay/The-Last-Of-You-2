@@ -20,7 +20,7 @@ class shopMenu:
         self.random_upgrade = []
         self.current_upgrade = []
 
-        with open('game/upgrade.json','r') as f:
+        with open('data\upgrade.json','r') as f:
             self.data = json.load(f)
        
         self.selectUpgrade()
