@@ -11,28 +11,33 @@ class Button():
 		self.rect = self.image.get_rect()
 		if center_pos == "topleft":
 			self.rect.topleft = (x,y)
+		elif center_pos == "topright":
+			self.rect.topright = (x,y)
 		elif center_pos == "bottomright":
 			self.rect.bottomright = (x,y)
 		self.clicked = False
+		self.activated = None
 		
 
 	def draw(self):
+		self.activated = True
 		self.screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
 	def detect(self):
-		action = False
-		#get mouse position
-		pos = pygame.mouse.get_pos()
+		if self.activated:
+			action = False
+			#get mouse position
+			pos = pygame.mouse.get_pos()
 
-		#check mouseover and clicked conditions
-		if self.rect.collidepoint(pos):
-				
-			if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-				self.clicked = True
-				action = True
+			#check mouseover and clicked conditions
+			if self.rect.collidepoint(pos):
+					
+				if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+					self.clicked = True
+					action = True
 
-		if pygame.mouse.get_pressed()[0] == 0:
-			self.clicked = False
+			if pygame.mouse.get_pressed()[0] == 0:
+				self.clicked = False
 
-		return action
+			return action

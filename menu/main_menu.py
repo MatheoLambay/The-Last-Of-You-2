@@ -74,7 +74,9 @@ class mainMenu:
             manager.push_menu(statMenu(self.screen))
 
         if self.codex_button.detect():
-            pass
+            from menu.codex_menu import codexMenu
+            self.fade(manager.screen,1920,1080)
+            manager.push_menu(codexMenu(self.screen))
 
         if self.start_button.detect():
             self.fade(manager.screen,1920,1080)
