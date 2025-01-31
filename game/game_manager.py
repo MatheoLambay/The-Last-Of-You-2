@@ -224,7 +224,7 @@ class gameManager(Map):
                             self.stat_player["dead killed"] += 1
                             self.stat_player["total gold"] += z.gold
                             
-                            self.player.score += 1
+                            self.player.score += 10
                             
                             drop = random.randint(1,100)
                             if 1 <= drop <= 30:

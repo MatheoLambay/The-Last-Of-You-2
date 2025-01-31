@@ -2,10 +2,9 @@
     "zombie_vert_1" : 
     {
         "attack": 1,
-        "life": 3,
+        "life": 1,
         "link":"img/game/zombie/greendead1.png",
         "gold": 10,
-        "amont": 3,
         "velocity": 0.5,
         "rate": 100,
         "min_score": 0,
@@ -15,10 +14,9 @@
     "zombie_vert_2" : 
     {
         "attack": 1,
-        "life": 3,
+        "life": 1,
         "link":"img/game/zombie/greendead2.png",
         "gold": 10,
-        "amont": 3,
         "velocity": 0.5,
         "rate": 90,
         "min_score": 0,
@@ -27,27 +25,78 @@
     "zombie_vert_3" : 
     {
         "attack": 1,
-        "life": 3,
+        "life": 1,
         "link":"img/game/zombie/greendead3.png",
         "gold": 10,
-        "amont": 3,
         "velocity": 0.5,
         "rate": 80,
         "min_score": 0,
         "scale": 1
     },
-    "zombie_rouge" : 
+    "zombie_bleu_1" : 
+    {
+        "attack": 1,
+        "life": 2,
+        "link":"img/game/zombie/bluedead1.png",
+        "gold": 25,
+        "velocity": 0.7,
+        "rate": 60,
+        "min_score": 100,
+        "scale": 1 
+    },
+    "zombie_bleu_2" : 
+    {
+        "attack": 1,
+        "life": 2,
+        "link":"img/game/zombie/bluedead2.png",
+        "gold": 25,
+        "velocity": 0.7,
+        "rate": 50,
+        "min_score": 100,
+        "scale": 1 
+    },
+    "zombie_bleu_3" : 
     {
         "attack": 1,
         "life": 3,
-        "link":"img/game/zombie/reddead_haut.png",
-        "gold": 10,
-        "amont": 3,
-        "velocity": 0.5,
-        "rate": 10,
+        "link":"img/game/zombie/bluedead3.png",
+        "gold": 25,
+        "velocity": 0.7,
+        "rate": 40,
         "min_score": 100,
-        "scale": 0.5 
+        "scale": 1 
+    },
+    "zombie_red_1" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/reddead1.png",
+        "gold": 40,
+        "velocity": 0.4,
+        "rate": 60,
+        "min_score": 200,
+        "scale": 1 
+    },
+    "zombie_red_2" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/reddead2.png",
+        "gold": 40,
+        "velocity": 0.4,
+        "rate": 50,
+        "min_score": 200,
+        "scale": 1 
+    },
+    "zombie_red_3" : 
+    {
+        "attack": 1,
+        "life": 3,
+        "link":"img/game/zombie/reddead3.png",
+        "gold": 40,
+        "velocity": 0.4,
+        "rate": 40,
+        "min_score": 200,
+        "scale": 1 
     }
-        
-    
     }
