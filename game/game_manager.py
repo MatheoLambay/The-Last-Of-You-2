@@ -328,6 +328,6 @@ class gameManager(Map):
                     self.last_damage_time = current_time
                     if self.player.life < 1:
                         """joueur mort"""
-                        with open("menu\stat.json", 'w') as w:
+                        with open("data\stat.json", 'w') as w:
                             json.dump(self.stat_player,w)
                         self.player.alive = 0  
