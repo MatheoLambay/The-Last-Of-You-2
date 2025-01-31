@@ -18,6 +18,8 @@ class upgrade:
             cible.attack += self.amount
         elif self.name == "increase_velocity":
             cible.velocity += self.amount
+        elif self.name == "increase_range_item":
+            cible.range_item += self.amount
         
         
         

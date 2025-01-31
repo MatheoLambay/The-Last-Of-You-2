@@ -89,11 +89,9 @@ class shopMenu:
             if i[0].detect():
                 if self.player.gold >= i[1].price:
                     i[1].apply(self.player)
-                    """self.player.current_upgrade.append(i[1].name)"""
                     self.player.gold -= i[1].price
                     if i[1].name in self.player.current_upgrade:
                         self.player.current_upgrade[i[1].name] += 1
-                        print('déja')
                     else:
                         self.player.current_upgrade[i[1].name] = 1
                 else:

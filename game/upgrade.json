@@ -30,7 +30,13 @@
     "link":"img/game/velocity.png",
     "price": 10,
     "amont": 1
+},
+"increase_range_item":
+{
+    "name": "increase_range_item",
+    "description":"incr item range",
+    "link":"img/game/velocity.png",
+    "price": 10,
+    "amont": 30
 }
-    
-
 }

@@ -261,7 +261,7 @@ class gameManager(Map):
             current_time = pygame.time.get_ticks()
             if i.map_x == self.map.case_x and i.map_y == self.map.case_y:
                 i.draw()
-            if(self.player.x-20 <= i.x <= self.player.x+20 and self.player.y-20 <= i.y <= self.player.y+20):
+            if(self.player.x-self.player.range_item <= i.x <= self.player.x+self.player.range_item and self.player.y-self.player.range_item <= i.y <= self.player.y+self.player.range_item):
                 if i.name == "ammo" and self.player.weapon_bullet < self.player.weapon_bullet_max:
                     i.give_ammo_to(self.player)
                 elif i.name == "heal" and self.player.life < self. player.life_max:

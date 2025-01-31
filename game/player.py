@@ -27,7 +27,8 @@ class Player:
         self.can_attack = 1
         self.gold = 0
         self.score = 0
-        self.player_in_market = 0  
+        self.player_in_market = 0 
+        self.range_item = 20
         self.current_upgrade = {}
 
 
