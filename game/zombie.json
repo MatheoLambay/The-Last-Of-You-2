@@ -58,7 +58,7 @@
     "zombie_bleu_3" : 
     {
         "attack": 1,
-        "life": 3,
+        "life": 2,
         "link":"img/game/zombie/bluedead3.png",
         "gold": 25,
         "velocity": 0.7,
