@@ -34,7 +34,7 @@ class gameManager(Map):
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,1,1)
 
-        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold)
+        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
         self.map1 = pygame.image.load("img\game\map1.png").convert_alpha()
         self.map2 = pygame.image.load("img\game\map2.png").convert_alpha()
@@ -171,6 +171,7 @@ class gameManager(Map):
         self.player_bar.max_xp = self.player.max_xp
         self.player_bar.hp = self.player.life
         self.player_bar.max_hp = self.player.life_max
+        self.player_bar.level = self.player.lvl
         
         self.player_bar.draw()
         self.player.draw()
@@ -242,6 +243,7 @@ class gameManager(Map):
                             z.drop_gold(self.player)
                             self.stat_player["dead killed"] += 1
                             self.stat_player["total gold"] += z.gold
+                            self.stat_player["total xp"] += z.xp
                             self.stat_player[z.name] += 1
                             self.zombie_killed[z.name] +=1
 

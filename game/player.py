@@ -31,7 +31,6 @@ class Player:
         self.lvl = 1
         self.xp = 0
         self.max_xp = self.get_next_lvl_xp()
-        print(self.max_xp)
 
         self.player_in_market = 0 
         self.range_item = 20
@@ -43,7 +42,6 @@ class Player:
             self.lvl += 1
             self.xp = 0
             self.max_xp = self.get_next_lvl_xp()
-            print(self.max_xp)
 
     def get_next_lvl_xp(self):
         return int(1000 * (1.1**self.lvl - 1.1**(self.lvl-1)))
