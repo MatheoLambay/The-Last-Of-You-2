@@ -27,13 +27,27 @@ class Player:
         self.can_attack = 1
         self.gold = 0
         self.score = 0
+
+        self.lvl = 1
+        self.xp = 0
+        self.max_xp = self.get_next_lvl_xp()
+        print(self.max_xp)
+
         self.player_in_market = 0 
         self.range_item = 20
         self.current_upgrade = {}
 
+    def get_level(self,new_xp):
+        self.xp += new_xp
+        if self.xp >= self.max_xp:
+            self.lvl += 1
+            self.xp = 0
+            self.max_xp = self.get_next_lvl_xp()
+            print(self.max_xp)
 
-    
-         
+    def get_next_lvl_xp(self):
+        return int(1000 * (1.1**self.lvl - 1.1**(self.lvl-1)))
+
     def point_at(self, m_pos):
         if self.alive:
             # Calculate the angle to the mouse position

@@ -34,7 +34,7 @@ class gameManager(Map):
 
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,1,1)
 
-        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.gold)
+        self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold)
 
         self.map1 = pygame.image.load("img\game\map1.png").convert_alpha()
         self.map2 = pygame.image.load("img\game\map2.png").convert_alpha()
@@ -167,6 +167,8 @@ class gameManager(Map):
         self.player_bar.gold = self.player.gold
         self.player_bar.ammo = self.player.weapon_bullet
         self.player_bar.max_ammo = self.player.weapon_bullet_max
+        self.player_bar.xp = self.player.xp
+        self.player_bar.max_xp = self.player.max_xp
         self.player_bar.hp = self.player.life
         self.player_bar.max_hp = self.player.life_max
         
@@ -205,9 +207,10 @@ class gameManager(Map):
                 life = self.zombies_pattern[random_zombie]["life"]
                 attack = self.zombies_pattern[random_zombie]["attack"]
                 gold = self.zombies_pattern[random_zombie]["gold"]
+                xp = self.zombies_pattern[random_zombie]["xp"]
                 velocity = self.zombies_pattern[random_zombie]["velocity"]
                 scale = self.zombies_pattern[random_zombie]["scale"]
-                self.zombies.append(Zombie(self.screen,link,spawn_position_x,spawn_position_y,name,life,attack,gold,velocity,scale))
+                self.zombies.append(Zombie(self.screen,link,spawn_position_x,spawn_position_y,name,life,attack,gold,xp,velocity,scale))
                 zombie_not_selected = 0
 
             else:
@@ -242,6 +245,7 @@ class gameManager(Map):
                             self.stat_player[z.name] += 1
                             self.zombie_killed[z.name] +=1
 
+                            self.player.get_level(z.xp)
                             self.player.score += 10
                             
                             drop = random.randint(1,100)
