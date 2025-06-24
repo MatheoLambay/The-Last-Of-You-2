@@ -1,8 +1,8 @@
 import pygame
 import json
-import random
 from button import Button
 from game.upgrade import upgrade
+
 
 
 class shopMenu:
@@ -38,6 +38,7 @@ class shopMenu:
            
             image = pygame.image.load(self.data[i]["link"]).convert_alpha()
             button = Button(self.screen,self.bg_rect.topleft[0]+space_x,self.bg_rect.topleft[1]+space_y,image,0.1)
+            
             up = upgrade(self.data[i]["name"],self.data[i]["description"],self.data[i]["amont"],self.data[i]["price"])
             self.current_upgrade.append((button,up))
 
@@ -92,8 +93,12 @@ class shopMenu:
 
         for i in self.current_upgrade:
             if i[0].detect():
+                
                 if self.player.gold >= i[1].price:
-                    i[1].apply(self.player)
+                    if i[1].name == "turret":
+                        i[1].additem(self.player)
+                    else:
+                        i[1].apply(self.player)
                     self.player.gold -= i[1].price
                     if i[1].name in self.player.current_upgrade:
                         self.player.current_upgrade[i[1].name] += 1

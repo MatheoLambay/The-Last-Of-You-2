@@ -16,6 +16,13 @@ class upgrade:
             setattr(player, self.name, current + self.amount)
         else:
             print(f"L'attribut {self.name} n'existe pas sur le joueur.")
+
+    def additem(self,player):
+        if hasattr(player, 'items'):
+            for i in player.items:
+                if i == 0:
+                    player.items[player.items.index(i)] = self.name
+                    return
         
         
         

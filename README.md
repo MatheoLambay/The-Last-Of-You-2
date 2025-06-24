@@ -1,10 +1,7 @@
 # The-Last-Of-You-2
 
-## upgrade
-* temps attente entre tire
-* vitesse des balles
-* item du shop pas 2 fois 
-
-## faire
-* codex
-* option
+* différent type de tourelle
+* utiliser sprite/groupe
+* update pour les tourelles 
+* animations de rotations 
+* skin 

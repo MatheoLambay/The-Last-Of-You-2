@@ -15,6 +15,7 @@ class Hud:
         self.xp = xp
         self.max_xp = max_xp
         self.level = level
+        self.items = [0,0,0]
 
     def move(self,x,y):
         self.x = x
@@ -46,6 +47,19 @@ class Hud:
         goldRect = gold_text.get_rect()
         goldRect.topright = (level.bottomright[0],level.bottomright[1])
 
+        last_rect =  [life.topright[0],textRect.bottomright[1]]
+
+        for i in self.items:
+    
+            slot = pygame.draw.rect(self.screen,"grey", (last_rect[0],last_rect[1], 30,30))
+            if i != 0:
+                pygame.draw.rect(self.screen,"green", (last_rect[0]+4,last_rect[1]+4, 21,21))
+            else:
+                pygame.draw.rect(self.screen,"red", (last_rect[0]+4,last_rect[1]+4, 21,21))
+            last_rect = slot.topright
+           
+            
+        
         self.screen.blit(lvl_text, lvlRect)
         self.screen.blit(ammo_text, textRect)
         self.screen.blit(gold_text, goldRect)

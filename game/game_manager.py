@@ -7,8 +7,9 @@ from game.map import Map
 from game.zombie import Zombie
 from game.bullet import Bullet
 from game.hud import Hud
-from game.SellerPnj import Pnj
+from game.turret import Turret
 from game.items import *
+from game.ShopPnj import ShopPnj
 from button import Button
 
 
@@ -50,12 +51,13 @@ class gameManager(Map):
         self.border = self.map.map_border()
 
         self.bullet = []
-        self.zombies = []
+        self.zombies = pygame.sprite.Group()
         self.items = []
         self.pnjs = []
+        self.turrets = []
 
         self.last_bullet_time = 0
-        self.bullet_interval = 100 
+        self.bullet_interval = 100
 
         self.last_zombie_time = 0
         self.zombie_interval = 1000
@@ -73,12 +75,15 @@ class gameManager(Map):
         self.player_in_safezone = 0
 
 
+        # self.pnjs.append(Pnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",0,0))
+        # self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
 
-        self.pnjs.append(Pnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",0,0))
-        self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
-        self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,2,2,"turret1",1,0))
+        self.pnjs.append(ShopPnj(self.screen,"img\game\pnj.png",1920/2,1080/2,0,1,"seller"))
+
+    
 
         
+
     
     def open(self, screen):
         screen.fill((255,255,255))
@@ -89,10 +94,20 @@ class gameManager(Map):
         pass
 
     def update(self, event, manager):
+
+        
+
+
         if self.player.alive:
 
             self.screen.fill((255,255,255))
             self.screen.blit(self.background,(0,0))
+
+            font = pygame.font.Font('freesansbold.ttf', 16)
+            gold_text = font.render(str(len(self.zombies)),True,(255,215,0))
+            goldRect = gold_text.get_rect()
+            goldRect.topleft = (100,100)
+            self.screen.blit(gold_text, goldRect)
 
             mouse_pos = pygame.mouse.get_pos()
             """orientation joueur"""
@@ -138,6 +153,9 @@ class gameManager(Map):
             """check map border"""
             self.border = self.map.map_border()
 
+            """update turrets in list"""
+            self.turrets_management()
+
             """update bullets in list"""
             self.bullets_management()
 
@@ -151,6 +169,9 @@ class gameManager(Map):
 
             """udpate zombies in list"""
             self.zombies_management()
+
+            """player items management"""
+            self.player_items_management()
             
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
@@ -173,6 +194,9 @@ class gameManager(Map):
         self.player_bar.hp = self.player.life
         self.player_bar.max_hp = self.player.life_max
         self.player_bar.level = self.player.lvl
+        
+        self.player_bar.items = self.player.items
+        print(self.player.items)
         
         self.player_bar.draw()
         self.player.draw()
@@ -212,7 +236,7 @@ class gameManager(Map):
                 xp = self.zombies_pattern[random_zombie]["xp"]
                 velocity = self.zombies_pattern[random_zombie]["velocity"]
                 scale = self.zombies_pattern[random_zombie]["scale"]
-                self.zombies.append(Zombie(self.screen,link,spawn_position_x,spawn_position_y,name,life,attack,gold,xp,velocity,scale))
+                self.zombies.add(Zombie(self.screen, link, spawn_position_x, spawn_position_y, name, life, attack, gold, xp, velocity, scale))
                 zombie_not_selected = 0
 
             else:
@@ -285,64 +309,66 @@ class gameManager(Map):
                 if self.player.player_in_market == 0:
                     p.draw()
 
-                # detecte si le joueur est dans la zone de sécurité
-                keyboard = pygame.key.get_pressed()
-                if p.rect.colliderect(self.player.rect) and p.attack < 1:
-                    self.player_in_safezone = 1
-                    self.player.can_attack = 0
-                    key = keyboard[pygame.K_e]
-                    if key and self.market_button == 0:
-                        self.player.player_in_market = 1
-                        from game.shop import shopMenu
-                        manager.push_menu(shopMenu(self.screen,self.player))
-                        
-                        print("pnj détecté")
-                    self.market_button = key
+                if p.name == "seller" or p.name == "safezone":
+                    # detecte si le joueur est dans la zone de sécurité
+                    if p.zone_rect.colliderect(self.player.rect):
+                        self.player_in_safezone = 1
+                        self.player.can_attack = 0
+                        keyboard = pygame.key.get_pressed()
+                        key = keyboard[pygame.K_e]
+                        if key and self.market_button == 0:
+                            self.player.player_in_market = 1
+                            from game.shop import shopMenu
+                            manager.push_menu(shopMenu(self.screen,self.player))
+                        self.market_button = key
                     
                 """Gestion de collision avec le joueur"""
-                if self.player.rect.colliderect(p.rect) and p.hitbox:
-                    overlap_x = min(self.player.rect.right - p.rect.left, p.rect.right - self.player.rect.left)
-                    overlap_y = min(self.player.rect.bottom - p.rect.top, p.rect.bottom - self.player.rect.top)
+                p.collision(self.player)
 
-                    if overlap_x < overlap_y:  # Collision dominante sur l'axe horizontal
-                        if self.player.rect.centerx < p.rect.centerx:
-                            self.player.x = p.rect.left - self.player.rect.width / 2
-                        else:
-                            self.player.x = p.rect.right + self.player.rect.width / 2
-                    elif overlap_x > overlap_y:  # Collision dominante sur l'axe vertical
-                        if self.player.rect.centery < p.rect.centery:
-                            self.player.y = p.rect.top - self.player.rect.height / 2
-                        else:
-                            self.player.y = p.rect.bottom + self.player.rect.height / 2
 
-                    self.player.rect.center = (self.player.x, self.player.y)
 
-                if p.attack > 0:
-                    for z in self.zombies:
-                        if p.in_zone(z):
-                            self.new_bullet((z.x,z.y),p)
-                #rajouter cooldown pour les balles du pnj et le faire disparaître si il n'a plus de balles
-    
+    def player_items_management(self):
+        keyboard = pygame.key.get_pressed()
+        
+        if keyboard[pygame.K_1] and self.player.items[0] != 0:
+            self.turrets.append(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
+            self.player.items[0] = 0
+        if keyboard[pygame.K_2] and self.player.items[1] != 0:
+            self.turrets.append(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
+            self.player.items[1] = 0
+        if keyboard[pygame.K_3] and self.player.items[2] != 0:
+            self.turrets.append(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
+            self.player.items[2] = 0
+            
 
+    def turrets_management(self):
+        for t in self.turrets:
+            if t.weapon_bullet < 1:
+                self.turrets.pop(self.turrets.index(t))
+                
+            if t.map_x == self.map.case_x and t.map_y == self.map.case_y:
+                if self.player.player_in_market == 0:
+                    t.draw()
+
+            for z in self.zombies:
+                if t.detect(z):
+                    self.new_bullet((z.x,z.y),t)
+            
+           
+            
     def zombies_management(self):
-        for z in self.zombies:
-            if z.life > 0:
-                if not(self.player_in_safezone):
-                    z.point_at((self.player.x,self.player.y))
-                    z.move_to(self.player.x,self.player.y)
-                if  0 <= z.x <= 1920 and 0 <= z.y <= 1080:
-                    z.draw()
-            else:
-                self.zombies.pop(self.zombies.index(z))
+        self.zombies.update(self.player, self.player_in_safezone)
 
-            if(self.player.x-20 <= z.x <= self.player.x+20 and self.player.y-20 <= z.y <= self.player.y+20)   : 
+        for z in self.zombies:
+            z.draw()
+
+            # Collision avec le joueur (zone réduite autour du joueur)
+            if abs(z.x - self.player.x) <= 20 and abs(z.y - self.player.y) <= 20:
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_damage_time >= self.damage_interval:
                     z.Attack(self.player)
-                    
                     self.last_damage_time = current_time
                     if self.player.life < 1:
-                        """joueur mort"""
-                        with open("data\stat.json", 'w') as w:
-                            json.dump(self.stat_player,w)
-                        self.player.alive = 0  
+                        with open("data/stat.json", 'w') as w:
+                            json.dump(self.stat_player, w)
+                        self.player.alive = 0

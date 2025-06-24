@@ -38,5 +38,13 @@
     "link":"img/game/velocity.png",
     "price": 10,
     "amont": 30
+},
+"auto_turret":
+{
+    "name": "turret",
+    "description":"turret level 1",
+    "link":"img/game/velocity.png",
+    "price": 1,
+    "amont": 1
 }
 }
