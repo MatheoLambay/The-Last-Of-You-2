@@ -7,14 +7,14 @@ from game.map import Map
 from game.zombie import Zombie
 from game.bullet import Bullet
 from game.hud import Hud
-from game.pnj import SellerPnj
+from game.SellerPnj import Pnj
 from game.items import *
 from button import Button
 
 
 
 class gameManager(Map):
-   
+    
     def __init__(self,screen):
         self.screen = screen
 
@@ -32,7 +32,7 @@ class gameManager(Map):
         self.end_img = pygame.image.load("img\main_menu\start_btn_upper.png").convert_alpha()
         self.end_btn = Button(screen,1920//2,1080//2,self.end_img)
 
-        self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,1,1)
+        self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,10,1)
 
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
@@ -74,9 +74,9 @@ class gameManager(Map):
 
 
 
+        self.pnjs.append(Pnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",0,0))
+        self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
 
-        self.pnjs.append(SellerPnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",999,0))
-        self.pnjs.append(SellerPnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
         
     
     def open(self, screen):
@@ -279,10 +279,12 @@ class gameManager(Map):
 
     def pnjs_management(self,manager):
         for p in self.pnjs:
+            # Check if the pnj is on the current map
             if p.map_x == self.map.case_x and p.map_y == self.map.case_y:
                 if self.player.player_in_market == 0:
                     p.draw()
 
+                # detecte si le joueur est dans la zone de sécurité
                 keyboard = pygame.key.get_pressed()
                 if p.rect.colliderect(self.player.rect):
                     self.player_in_safezone = 1
@@ -313,6 +315,11 @@ class gameManager(Map):
                             self.player.y = p.rect.bottom + self.player.rect.height / 2
 
                     self.player.rect.center = (self.player.x, self.player.y)
+
+            if p.attack > 0:
+                pass
+            #rajouter une range au pnj pour qu'il puisse attaquer les zombies
+            #attaquer les zombies dans la range du pnj
     
 
     def zombies_management(self):

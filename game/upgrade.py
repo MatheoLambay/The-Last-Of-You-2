@@ -8,18 +8,14 @@ class upgrade:
         self.amount = amount
         self.price = price
 
-    def apply(self,cible):
-        
-        if self.name == "max_ammo":
-            cible.weapon_bullet_max += self.amount
-        elif self.name == "max_life":
-            cible.life_max += self.amount
-        elif self.name == "increase_damage":
-            cible.attack += self.amount
-        elif self.name == "increase_velocity":
-            cible.velocity += self.amount
-        elif self.name == "increase_range_item":
-            cible.range_item += self.amount
+
+    def apply(self,player):
+        # Vérifie si le joueur a l'attribut à upgrader
+        if hasattr(player, self.name):
+            current = getattr(player, self.name)
+            setattr(player, self.name, current + self.amount)
+        else:
+            print(f"L'attribut {self.name} n'existe pas sur le joueur.")
         
         
         

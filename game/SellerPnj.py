@@ -1,6 +1,6 @@
 import pygame
 
-class SellerPnj:
+class Pnj:
     def __init__(self,screen,link,x,y,map_x,map_y,name,attack,hitbox,scale=1):
         self.screen = screen
         self.name = name

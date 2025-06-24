@@ -22,7 +22,6 @@ class Hud:
 
     def draw(self):
         
-
         font = pygame.font.Font('freesansbold.ttf', 16)
         text = "%i/%i"%(self.ammo,self.max_ammo)
         ammo_text = font.render(text,True,(0,0,0))
