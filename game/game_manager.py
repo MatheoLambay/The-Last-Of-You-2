@@ -76,6 +76,7 @@ class gameManager(Map):
 
         self.pnjs.append(Pnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",0,0))
         self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
+        self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,2,2,"turret1",1,0))
 
         
     
@@ -108,7 +109,7 @@ class gameManager(Map):
             mouse_click = pygame.mouse.get_pressed()
             if mouse_click[0] and self.player.weapon_bullet > 0 and self.player.can_attack: 
                 if current_time - self.last_bullet_time >= self.bullet_interval and self.player.can_attack:
-                    self.new_bullet(mouse_pos)
+                    self.new_bullet(mouse_pos,self.player)
                     self.last_bullet_time = current_time 
 
             """spawn zombie"""
@@ -218,10 +219,10 @@ class gameManager(Map):
                 new_zombies_pattern.pop(new_zombies_pattern.index(random_zombie))
 
 
-    def new_bullet(self,mouse_pos):
-        if self.player.weapon_bullet > 0:
-            self.bullet.append(Bullet(self.screen,"img\game\ibullet.png", self.player.x, self.player.y, mouse_pos,0.8))
-            self.player.weapon_bullet -= 1 
+    def new_bullet(self,direction,player):
+        if player.weapon_bullet > 0:
+            self.bullet.append(Bullet(self.screen,"img\game\ibullet.png", player.x, player.y, direction,0.8))
+            player.weapon_bullet -= 1 
         else:
             pass
 
@@ -286,7 +287,7 @@ class gameManager(Map):
 
                 # detecte si le joueur est dans la zone de sécurité
                 keyboard = pygame.key.get_pressed()
-                if p.rect.colliderect(self.player.rect):
+                if p.rect.colliderect(self.player.rect) and p.attack < 1:
                     self.player_in_safezone = 1
                     self.player.can_attack = 0
                     key = keyboard[pygame.K_e]
@@ -316,10 +317,11 @@ class gameManager(Map):
 
                     self.player.rect.center = (self.player.x, self.player.y)
 
-            if p.attack > 0:
-                pass
-            #rajouter une range au pnj pour qu'il puisse attaquer les zombies
-            #attaquer les zombies dans la range du pnj
+                if p.attack > 0:
+                    for z in self.zombies:
+                        if p.in_zone(z):
+                            self.new_bullet((z.x,z.y),p)
+                #rajouter cooldown pour les balles du pnj et le faire disparaître si il n'a plus de balles
     
 
     def zombies_management(self):

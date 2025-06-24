@@ -16,9 +16,17 @@ class Pnj:
         self.map_y = map_y
         self.attack = attack
         self.hitbox = hitbox
+        self.weapon_bullet = 100
+        self.range = 200
 
-    def Attack(self,cible):
-        cible.life -= self.attack
+    def in_zone(self,cible):
+        if cible.x > self.x - self.range and cible.x < self.x + self.range and cible.y > self.y - self.range and cible.y < self.y + self.range:
+            return True
+        return False
 
     def draw(self):
+        if self.attack > 0:
+            pygame.draw.circle(self.screen, "red", (self.x,self.y), self.range)
+            pygame.draw.circle(self.screen, "white", (self.x,self.y), self.range-10)
+            
         self.screen.blit(self.image,self.rect)
