@@ -54,7 +54,7 @@ class gameManager(Map):
         self.zombies = pygame.sprite.Group()
         self.items = []
         self.pnjs = []
-        self.turrets = []
+        self.turrets = pygame.sprite.Group()
 
         self.last_bullet_time = 0
         self.bullet_interval = 100
@@ -331,21 +331,21 @@ class gameManager(Map):
         keyboard = pygame.key.get_pressed()
         
         if keyboard[pygame.K_1] and self.player.items[0] != 0:
-            self.turrets.append(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
+            self.turrets.add(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
             self.player.items[0] = 0
         if keyboard[pygame.K_2] and self.player.items[1] != 0:
-            self.turrets.append(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
+            self.turrets.add(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
             self.player.items[1] = 0
         if keyboard[pygame.K_3] and self.player.items[2] != 0:
-            self.turrets.append(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
+            self.turrets.add(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
             self.player.items[2] = 0
             
 
     def turrets_management(self):
+        self.turrets.update(self.zombies)
+        
         for t in self.turrets:
-            if t.weapon_bullet < 1:
-                self.turrets.pop(self.turrets.index(t))
-                
+            
             if t.map_x == self.map.case_x and t.map_y == self.map.case_y:
                 if self.player.player_in_market == 0:
                     t.draw()
@@ -353,9 +353,12 @@ class gameManager(Map):
             for z in self.zombies:
                 if t.detect(z):
                     self.new_bullet((z.x,z.y),t)
-            
+    
+
+
+
+
            
-            
     def zombies_management(self):
         self.zombies.update(self.player, self.player_in_safezone)
 

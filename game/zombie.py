@@ -52,6 +52,7 @@ class Zombie(pygame.sprite.Sprite):
         cible.gold += self.gold
 
     def update(self, player, player_in_safezone):
+        print(player)
         if self.life > 0:
             if not player_in_safezone:
                 self.point_at((player.x, player.y))

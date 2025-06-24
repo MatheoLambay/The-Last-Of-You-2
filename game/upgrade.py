@@ -8,7 +8,6 @@ class upgrade:
         self.amount = amount
         self.price = price
 
-
     def apply(self,player):
         # Vérifie si le joueur a l'attribut à upgrader
         if hasattr(player, self.name):
