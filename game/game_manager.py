@@ -342,23 +342,13 @@ class gameManager(Map):
             
 
     def turrets_management(self):
-        self.turrets.update(self.zombies)
-        
         for t in self.turrets:
-            
             if t.map_x == self.map.case_x and t.map_y == self.map.case_y:
                 if self.player.player_in_market == 0:
                     t.draw()
-
-            for z in self.zombies:
-                if t.detect(z):
-                    self.new_bullet((z.x,z.y),t)
+                    t.update(self.zombies, self.new_bullet)
     
 
-
-
-
-           
     def zombies_management(self):
         self.zombies.update(self.player, self.player_in_safezone)
 
