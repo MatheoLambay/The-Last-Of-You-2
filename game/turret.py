@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Turret(pygame.sprite.Sprite):
-    def __init__(self,screen,link,x,y,map_x,map_y,attack,scale=1):
+    def __init__(self,screen,link,x,y,map_x,map_y,attack,weapon_bullet,range,scale=2):
         super().__init__()
         self.screen = screen
        
@@ -26,8 +26,8 @@ class Turret(pygame.sprite.Sprite):
         self.last_angle = None
 
         self.attack = attack
-        self.weapon_bullet = 10
-        self.range = 200
+        self.weapon_bullet = weapon_bullet
+        self.range = range
 
         self.last_bullet_time = 0
         self.bullet_interval = 1000 
@@ -93,7 +93,7 @@ class Turret(pygame.sprite.Sprite):
 
 
     def draw(self):
-        pygame.draw.circle(self.screen, "red", (self.x,self.y), self.range)
-        pygame.draw.circle(self.screen, "white", (self.x,self.y), self.range-10)
+        pygame.draw.circle(self.screen, "red", (self.x,self.y), self.range, width=1)
+        # pygame.draw.circle(self.screen, "white", (self.x,self.y), self.range-10)
         self.screen.blit(self.image,self.rect)
 

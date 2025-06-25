@@ -49,7 +49,7 @@
         "xp":20,
         "velocity": 0.7,
         "rate": 60,
-        "min_score": 100,
+        "min_score": 300,
         "scale": 1 
     },
     "zombie_bleu_2" : 
@@ -62,7 +62,7 @@
         "xp":20,
         "velocity": 0.7,
         "rate": 50,
-        "min_score": 100,
+        "min_score": 300,
         "scale": 1 
     },
     "zombie_bleu_3" : 
@@ -75,7 +75,7 @@
         "xp":20,
         "velocity": 0.7,
         "rate": 40,
-        "min_score": 100,
+        "min_score": 300,
         "scale": 1 
     },
     "zombie_red_1" : 
@@ -88,7 +88,7 @@
         "xp":30,
         "velocity": 0.4,
         "rate": 60,
-        "min_score": 200,
+        "min_score": 500,
         "scale": 1 
     },
     "zombie_red_2" : 
@@ -101,7 +101,7 @@
         "xp":30,
         "velocity": 0.4,
         "rate": 50,
-        "min_score": 200,
+        "min_score": 500,
         "scale": 1 
     },
     "zombie_red_3" : 
@@ -114,7 +114,20 @@
         "xp":30,
         "velocity": 0.4,
         "rate": 40,
-        "min_score": 200,
+        "min_score": 500,
         "scale": 1 
+    },
+    "zombie_yellow_1" : 
+    {
+        "name": "yellowdead",
+        "attack": 2,
+        "life": 2,
+        "link":"img/game/zombie/yellowdead1.png",
+        "gold": 80,
+        "xp":40,
+        "velocity": 1,
+        "rate": 60,
+        "min_score": 1000,
+        "scale": 0.3 
     }
-    }
+}

@@ -53,11 +53,22 @@ class Hud:
     
             slot = pygame.draw.rect(self.screen,"grey", (last_rect[0],last_rect[1], 30,30))
             if i != 0:
-                pygame.draw.rect(self.screen,"green", (last_rect[0]+4,last_rect[1]+4, 21,21))
+                item_frame = pygame.draw.rect(self.screen,"green", (last_rect[0]+4,last_rect[1]+4, 21,21))
+
+                self.original_image = pygame.image.load(i["link"]).convert_alpha()
+                width = self.original_image.get_width()
+                height = self.original_image.get_height()
+                self.original_image = pygame.transform.scale(self.original_image, (int(width * 0.5), int(height * 0.5)))
+                self.original_image_rect = self.original_image.get_rect()
+                self.original_image_rect.center = (item_frame.centerx, item_frame.centery)
+                self.screen.blit(self.original_image, self.original_image_rect)
+
+
             else:
                 pygame.draw.rect(self.screen,"red", (last_rect[0]+4,last_rect[1]+4, 21,21))
             last_rect = slot.topright
-           
+        
+        
             
         
         self.screen.blit(lvl_text, lvlRect)

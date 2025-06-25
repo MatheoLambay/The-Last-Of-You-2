@@ -39,12 +39,29 @@
     "price": 10,
     "amont": 30
 },
-"auto_turret":
+
+"basic_turret":
 {
     "name": "turret",
-    "description":"turret level 1",
+    "description":"makeshift turret",
     "link":"img/game/velocity.png",
+    "iglink":"img/game/basic_turret.png",
+    "damage":1,
+    "weapon_bullet":10,
+    "range":200,
     "price": 1,
+    "amont": 1
+},
+"auto_turret_2":
+{
+    "name": "turret",
+    "description":"basic turret",
+    "link":"img/game/velocity.png",
+    "iglink":"img/game/2_turret.png",
+    "damage":1,
+    "weapon_bullet":20,
+    "range":250,
+    "price": 2,
     "amont": 1
 }
 }

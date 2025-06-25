@@ -32,9 +32,10 @@ class Player:
         self.xp = 0
         self.max_xp = self.get_next_lvl_xp()
 
-        self.items = ["turret",0,0]
+        self.items = [0,0,0]
 
         self.player_in_market = 0 
+        self.player_just_bought = 0
         self.range_item = 20
         self.current_upgrade = {}
 

@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Map:
     def __init__(self,screen,map):
@@ -48,3 +49,8 @@ class Map:
             self.border["up"] = 1
         
         return self.border
+    
+    def get_random_case(self):
+        return (random.randint(self.min_case_x,self.max_case_x),random.randint(self.min_case_y,self.max_case_y))
+    
+    

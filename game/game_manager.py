@@ -1,7 +1,6 @@
 import pygame
 import random
 import json
-
 from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
@@ -11,6 +10,7 @@ from game.turret import Turret
 from game.items import *
 from game.ShopPnj import ShopPnj
 from button import Button
+
 
 
 
@@ -27,13 +27,9 @@ class gameManager(Map):
         
         self.background = pygame.image.load("img\game\map5.png").convert_alpha()
 
-        self.death_img = pygame.image.load("img\game\gameover.png").convert_alpha()
-        self.deat_rect = self.death_img.get_rect().center =(1920/2,1080/2) 
+        
 
-        self.end_img = pygame.image.load("img\main_menu\start_btn_upper.png").convert_alpha()
-        self.end_btn = Button(screen,1920//2,1080//2,self.end_img)
-
-        self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,10,1)
+        self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
 
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
@@ -69,22 +65,16 @@ class gameManager(Map):
         self.play_interval = 1000
 
         self.time_played = 0
-        self.zombie_killed = {"greendead":0,"bluedead":0,"reddead":0}
+        self.zombie_killed = {"greendead":0,"bluedead":0,"reddead":0,"yellowdead":0}
         
         self.market_button = 0
         self.player_in_safezone = 0
+        self.death_animation_flag = 1
 
-
-        # self.pnjs.append(Pnj(self.screen,"img\game\zonesafe.png",1920/2,1080/2,0,1,"market",0,0))
-        # self.pnjs.append(Pnj(self.screen,"img\game\pnj.png ",1920/2,1080/2,0,1,"vendeur",0,1))
-
-        self.pnjs.append(ShopPnj(self.screen,"img\game\pnj.png",1920/2,1080/2,0,1,"seller"))
-
-    
-
+        pnj_spawn = self.map.get_random_case()
+        self.pnjs.append(ShopPnj(self.screen,"img\game\Seller.png",random.randint(100,1820),random.randint(100,980),pnj_spawn[0],pnj_spawn[1],"seller"))
         
 
-    
     def open(self, screen):
         screen.fill((255,255,255))
         self.screen.blit(self.background,(0,0))
@@ -94,9 +84,6 @@ class gameManager(Map):
         pass
 
     def update(self, event, manager):
-
-        
-
 
         if self.player.alive:
 
@@ -177,12 +164,48 @@ class gameManager(Map):
                 self.draw_update_player_hud()
             
         else:
-            self.screen.blit(self.death_img,self.deat_rect)
-            self.end_btn.draw()
+
+            
+            if self.death_animation_flag:
+                self.fade_death()
+                self.death_animation_flag = 0
+
+    
             if self.end_btn.detect():
                 from menu.resume_menu import resumeMenu
                 manager.push_menu(resumeMenu(self.screen,self.zombie_killed,self.time_played,self.player.gold,self.player.current_upgrade))
             
+
+    def fade_death(self):
+
+        self.death_img = pygame.image.load("img\game\gameover.png").convert_alpha()
+        self.death_surface = pygame.Surface(self.death_img.get_size(), pygame.SRCALPHA)
+        self.death_surface.blit(self.death_img, (0, 0))
+        self.death_surface.set_alpha(0)
+        self.death_surface_rect = self.death_surface.get_rect(center=(1920 // 2, 1080 // 2))
+
+        for i in range(0, 255, 5):
+            self.death_surface.set_alpha(i)
+            self.screen.blit(self.death_surface, self.death_surface_rect)
+            pygame.display.flip()
+            pygame.time.delay(50)
+
+        
+        self.end_img = pygame.image.load("img\main_menu\start_btn_upper.png").convert_alpha()
+        self.end_img_rect = self.end_img.get_rect()
+
+        self.end_img_rect.centerx = self.death_surface_rect.centerx
+        self.end_img_rect.top = self.death_surface_rect.bottom + 20  
+
+        self.end_btn = Button(self.screen, self.end_img_rect.x, self.end_img_rect.y, self.end_img)
+        self.end_btn.draw()
+
+    def set_seller_position(self,p):
+        pnj_spawn = self.map.get_random_case()
+        p.map_x = pnj_spawn[0]
+        p.map_y = pnj_spawn[1]
+
+    
 
     def draw_update_player_hud(self):
     
@@ -196,51 +219,61 @@ class gameManager(Map):
         self.player_bar.level = self.player.lvl
         
         self.player_bar.items = self.player.items
-        print(self.player.items)
+      
         
         self.player_bar.draw()
         self.player.draw()
 
-
     def new_zombie(self):
-        if(random.randint(0,1)):
-            if(random.randint(0,1)):
-                spawn_position_x = random.randint(0,1920)
-                spawn_position_y = 0
-            else:
-                spawn_position_x = random.randint(0,1920)
-                spawn_position_y = 1080
+        # Choix de la position de spawn
+        if random.randint(0, 1):
+            spawn_position_x = random.randint(0, 1920)
+            spawn_position_y = 0 if random.randint(0, 1) else 1080
         else:
-            if(random.randint(0,1)):
-                spawn_position_x = 0
-                spawn_position_y = random.randint(0,1080)
-            else:
-                spawn_position_x = 1920
-                spawn_position_y = random.randint(0,1080)
+            spawn_position_x = 0 if random.randint(0, 1) else 1920
+            spawn_position_y = random.randint(0, 1080)
 
-        spawn_percent = random.randint(0,100)
-        new_zombies_pattern = list(self.zombies_pattern.keys())
-    
-        zombie_not_selected = 1
+        # Construction de la liste des zombies valides
+        zombies_pondérés = []
+        poids_total = 0
 
-        while zombie_not_selected:
-            
-            random_zombie = random.choice(new_zombies_pattern)
+        for key, zombie in self.zombies_pattern.items():
+            if self.player.score >= zombie["min_score"]:
+                force = zombie["life"]
+                base_rate = zombie["rate"]
+                # Formule pondérée (ajuste le 0.005 si nécessaire)
+                poids = (1 / base_rate) * (1 + self.player.score * 0.005 * force)
+                zombies_pondérés.append((key, zombie, poids))
+                poids_total += poids
 
-            if self.zombies_pattern[random_zombie]["rate"] >= spawn_percent and self.zombies_pattern[random_zombie]["min_score"] <= self.player.score: 
-                name = self.zombies_pattern[random_zombie]["name"]
-                link = self.zombies_pattern[random_zombie]["link"]
-                life = self.zombies_pattern[random_zombie]["life"]
-                attack = self.zombies_pattern[random_zombie]["attack"]
-                gold = self.zombies_pattern[random_zombie]["gold"]
-                xp = self.zombies_pattern[random_zombie]["xp"]
-                velocity = self.zombies_pattern[random_zombie]["velocity"]
-                scale = self.zombies_pattern[random_zombie]["scale"]
-                self.zombies.add(Zombie(self.screen, link, spawn_position_x, spawn_position_y, name, life, attack, gold, xp, velocity, scale))
-                zombie_not_selected = 0
+        # Sélection d’un zombie selon la pondération
+        r = random.uniform(0, 1)
+        cumul = 0
+        zombie_choisi = None
+        for key, zombie, poids in zombies_pondérés:
+            ratio = poids / poids_total
+            cumul += ratio
+            if r < cumul:
+                zombie_choisi = zombie
+                break
 
-            else:
-                new_zombies_pattern.pop(new_zombies_pattern.index(random_zombie))
+        # Instanciation du zombie sélectionné
+        if zombie_choisi:
+            self.zombies.add(
+                Zombie(
+                    self.screen,
+                    zombie_choisi["link"],
+                    spawn_position_x,
+                    spawn_position_y,
+                    zombie_choisi["name"],
+                    zombie_choisi["life"],
+                    zombie_choisi["attack"],
+                    zombie_choisi["gold"],
+                    zombie_choisi["xp"],
+                    zombie_choisi["velocity"],
+                    zombie_choisi["scale"],
+                )
+            )
 
 
     def new_bullet(self,direction,player):
@@ -318,9 +351,13 @@ class gameManager(Map):
                         key = keyboard[pygame.K_e]
                         if key and self.market_button == 0:
                             self.player.player_in_market = 1
-                            from game.shop import shopMenu
-                            manager.push_menu(shopMenu(self.screen,self.player))
+                            p.openShop(manager,self.player)
                         self.market_button = key
+                    
+                    if self.player.player_just_bought:
+                        print("Player just bought an item, resetting market button")
+                        self.set_seller_position(p)
+                        self.player.player_just_bought = 0
                     
                 """Gestion de collision avec le joueur"""
                 p.collision(self.player)
@@ -331,16 +368,20 @@ class gameManager(Map):
         keyboard = pygame.key.get_pressed()
         
         if keyboard[pygame.K_1] and self.player.items[0] != 0:
-            self.turrets.add(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
-            self.player.items[0] = 0
+            if self.player.items[0]["name"] == "turret":
+                self.place_turret(0)
         if keyboard[pygame.K_2] and self.player.items[1] != 0:
-            self.turrets.add(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
-            self.player.items[1] = 0
+            if self.player.items[1]["name"] == "turret":
+                self.place_turret(1)
         if keyboard[pygame.K_3] and self.player.items[2] != 0:
-            self.turrets.add(Turret(self.screen,"img\game\pnj.png",self.player.x,self.player.y,self.map.case_x,self.map.case_y,1))
-            self.player.items[2] = 0
+            if self.player.items[2]["name"] == "turret":
+                self.place_turret(2)
             
-
+    def place_turret(self,slot):
+        self.turrets.add(Turret(self.screen,self.player.items[slot]["link"],self.player.x,self.player.y,self.map.case_x,self.map.case_y,self.player.items[slot]["damage"],self.player.items[slot]["weapon_bullet"], self.player.items[slot]["range"]))
+        self.player.items[slot] = 0
+        
+    
     def turrets_management(self):
         for t in self.turrets:
             if t.map_x == self.map.case_x and t.map_y == self.map.case_y:

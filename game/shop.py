@@ -4,7 +4,6 @@ from button import Button
 from game.upgrade import upgrade
 
 
-
 class shopMenu:
     def __init__(self,screen,player):
         self.screen = screen
@@ -38,8 +37,12 @@ class shopMenu:
            
             image = pygame.image.load(self.data[i]["link"]).convert_alpha()
             button = Button(self.screen,self.bg_rect.topleft[0]+space_x,self.bg_rect.topleft[1]+space_y,image,0.1)
-            
-            up = upgrade(self.data[i]["name"],self.data[i]["description"],self.data[i]["amont"],self.data[i]["price"])
+            if self.data[i]["name"] == "turret":
+                up = upgrade(self.data[i]["name"],self.data[i]["description"],self.data[i]["amont"],self.data[i]["price"],(self.data[i]["damage"],self.data[i]["weapon_bullet"], self.data[i]["range"],self.data[i]["iglink"]))
+                
+            else:
+                up = upgrade(self.data[i]["name"],self.data[i]["description"],self.data[i]["amont"],self.data[i]["price"])
+                
             self.current_upgrade.append((button,up))
 
             if not(items%5):
@@ -49,13 +52,14 @@ class shopMenu:
                 space_x += 195
             items+=1
         
-        
+
     def open(self, screen):
         pass
     
+
     def close(self):
         self.player.player_in_market = 0
-
+        
 
     def update(self, event, manager):
         """Met à jour les interactions du menu et affiche tout."""
@@ -95,14 +99,21 @@ class shopMenu:
             if i[0].detect():
                 
                 if self.player.gold >= i[1].price:
+                    #si l'item est une tourelle, on l'ajoute à l'inventaire du joueur
                     if i[1].name == "turret":
-                        i[1].additem(self.player)
+                        # On vérifie si le joueur a de la place dans son inventaire
+                        if i[1].additem(self.player):
+                            self.player.gold -= i[1].price
                     else:
+                        #si l'item n'est pas une tourelle, on applique l'upgrade
                         i[1].apply(self.player)
-                    self.player.gold -= i[1].price
+                        self.player.gold -= i[1].price
+                    
                     if i[1].name in self.player.current_upgrade:
                         self.player.current_upgrade[i[1].name] += 1
                     else:
                         self.player.current_upgrade[i[1].name] = 1
+                    setattr(self.player, "player_just_bought", 1)
+                    manager.pop_menu()
                 else:
                     print('no money')

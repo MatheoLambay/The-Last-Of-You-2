@@ -1,4 +1,5 @@
 import pygame
+from game.shop import shopMenu
 
 class ShopPnj:
     def __init__(self,screen,link,x,y,map_x,map_y,name,scale=1):
@@ -50,3 +51,6 @@ class ShopPnj:
                     player.y = self.rect.bottom + player.rect.height / 2
 
             player.rect.center = (player.x, player.y)
+
+    def openShop(self,manager,player):
+        manager.push_menu(shopMenu(self.screen, player))
