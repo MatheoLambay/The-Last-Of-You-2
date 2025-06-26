@@ -2,18 +2,30 @@ import pygame
 import random
 
 class Map:
-    def __init__(self,screen,map):
+    def __init__(self,screen,texture):
         self.screen = screen
-        
-        self.case_x = 1
-        self.case_y = 1
-        self.max_case_x = 2
-        self.max_case_y = 2
+        self.texture = texture
+
         self.min_case_x = 0
         self.min_case_y = 0
-        self.map = map
-        self.border = {"up":0,"down":0,"left":0,"right":0}
+        self.max_case_x = len(self.texture[0])-1
+        self.max_case_y = len(self.texture)-1
+        self.case_x = 0
+        self.case_y = 0
         
+        self.border = {"up":0,"down":0,"left":0,"right":0}
+
+        self.load_map()
+        
+    def load_map(self):
+        self.map = []
+        for y in self.texture:
+            current_row = []
+            for x in y:
+                current_row.append(pygame.image.load(x).convert_alpha())
+            self.map.append(current_row)
+        print(self.map)
+    
         
     def switch_map(self,direction):
         
@@ -52,5 +64,9 @@ class Map:
     
     def get_random_case(self):
         return (random.randint(self.min_case_x,self.max_case_x),random.randint(self.min_case_y,self.max_case_y))
+    
+    def get_spawn_map(self):
+        print("Spawn map at: ",self.map[self.case_y][self.case_x])
+        return self.map[self.case_y][self.case_x]
     
     

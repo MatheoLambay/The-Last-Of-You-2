@@ -129,5 +129,18 @@
         "rate": 60,
         "min_score": 1000,
         "scale": 0.3 
+    },
+    "zombie_yellow_2" : 
+    {
+        "name": "yellowdead",
+        "attack": 2,
+        "life": 2,
+        "link":"img/game/zombie/yellowdead2.png",
+        "gold": 80,
+        "xp":40,
+        "velocity": 1,
+        "rate": 50,
+        "min_score": 1000,
+        "scale": 0.3 
     }
 }

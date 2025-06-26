@@ -12,8 +12,6 @@ from game.ShopPnj import ShopPnj
 from button import Button
 
 
-
-
 class gameManager(Map):
     
     def __init__(self,screen):
@@ -25,26 +23,22 @@ class gameManager(Map):
         with open('data\stat.json', 'r') as s:
             self.stat_player = json.load(s)
         
-        self.background = pygame.image.load("img\game\map5.png").convert_alpha()
-
         
 
+        #création du joueur et du hud
         self.player = Player(screen,"img\game\easter_egg.png",1920/2,1080/2,3,1)
-
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
-        self.map1 = pygame.image.load("img\game\map1.png").convert_alpha()
-        self.map2 = pygame.image.load("img\game\map2.png").convert_alpha()
-        self.map3 = pygame.image.load("img\game\map3.png").convert_alpha()
-        self.map4 = pygame.image.load("img\game\map4.png").convert_alpha()
-        self.map5 = pygame.image.load("img\game\map5.png").convert_alpha()
-        self.map6 = pygame.image.load("img\game\map6.png").convert_alpha()
-        self.map7 = pygame.image.load("img\game\map7.png").convert_alpha()
-        self.map8 = pygame.image.load("img\game\map8.png").convert_alpha()
-        self.map9 = pygame.image.load("img\game\map9.png").convert_alpha()
-
-        self.map = Map(screen,(((self.map1),(self.map2),(self.map3)),((self.map4),(self.map5),(self.map6)),((self.map7),(self.map8),(self.map9))))
+        
+        #mpa 2x4
+        #texture_map = (("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png"),("img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png"))
+        #map 3X3
+        texture_map = (("img\game\map1.png","img\game\map2.png","img\game\map3.png"),("img\game\map4.png","img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png","img\game\map9.png"))
+        
+        #création de la map
+        self.map = Map(screen,texture_map)
         self.border = self.map.map_border()
+        self.background = self.map.get_spawn_map()
 
         self.bullet = []
         self.zombies = pygame.sprite.Group()
@@ -53,14 +47,17 @@ class gameManager(Map):
         self.turrets = pygame.sprite.Group()
 
         self.last_bullet_time = 0
-        self.bullet_interval = 100
+        self.bullet_interval = self.player.attack_cooldown
 
+        # intervalles pour le spawn de zombies
         self.last_zombie_time = 0
         self.zombie_interval = 1000
 
+        # intervalles pour les dégâts du joueur
         self.last_damage_time = 0
-        self.damage_interval = 2000
+        self.damage_interval = 1000
 
+        # statistiques du joueur (temps)
         self.last_play_time = 0
         self.play_interval = 1000
 

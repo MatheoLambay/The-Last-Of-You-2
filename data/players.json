@@ -1,0 +1,15 @@
+{
+"1":
+{
+    "name": "Elliot",
+    "attack": 1,
+    "life": 3,
+    "link": "img/game/easter_egg.png",
+    "velocity": 2,
+    "weapon_bullet_max": 10,
+    "attack_cooldown": 100,
+    "range_item":20
+
+}
+
+}

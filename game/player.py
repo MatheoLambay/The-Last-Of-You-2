@@ -18,10 +18,10 @@ class Player:
         self.life = self.life_max
 
         self.attack = attack
-        self.attack_speed = 1
         self.velocity = 2
         self.weapon_bullet_max = 100
         self.weapon_bullet = self.weapon_bullet_max
+        self.attack_cooldown = 100
         self.alive = 1
         self.direction = None
         self.can_attack = 1
