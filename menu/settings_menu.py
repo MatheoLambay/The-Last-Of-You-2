@@ -1,14 +1,29 @@
 import pygame
 from button import Button
+from menu.tools.map_touch import Touch
+import json
 
 class settingsMenu:
     def __init__(self,screen):
         self.screen = screen
+
+        with open('data\controls.json', 'r') as s:
+            self.controls = json.load(s)
+
         self.title_img = pygame.image.load("img\settings_menu\menutitle.png").convert_alpha()
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
+        
         self.background_img = pygame.image.load("img\settings_menu\sbackground.webp").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
+
         self.back_button = Button(self.screen,20,900,self.back_img,0.8)
+
+        self.touch_list = []
+        x = 200
+        y = 400
+        for i in self.controls.items():
+            self.touch_list.append(Touch(self.screen, i,x,y))
+            y+=60
 
     def fade(self,screen,SCREENWIDTH, SCREENHEIGHT): 
         fade = pygame.Surface((SCREENWIDTH, SCREENHEIGHT))
@@ -34,6 +49,11 @@ class settingsMenu:
         titlerect = self.title_img.get_rect()
         titlerect.topleft = (0,1080/100)
         screen.blit(self.title_img, titlerect)
+        
+        
+        for i in self.touch_list:
+            i.draw()
+        
         
         self.back_button.draw()
 
