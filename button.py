@@ -17,6 +17,7 @@ class Button():
 			self.rect.bottomright = (x,y)
 		self.clicked = False
 		self.activated = None
+		self.over_on = 0
 		
 
 	def draw(self):
@@ -41,3 +42,4 @@ class Button():
 				self.clicked = False
 
 			return action
+		

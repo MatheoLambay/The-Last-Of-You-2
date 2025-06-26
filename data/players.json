@@ -6,10 +6,21 @@
     "life": 3,
     "link": "img/game/easter_egg.png",
     "velocity": 2,
-    "weapon_bullet_max": 10,
+    "weapon_bullet_max": 100,
     "attack_cooldown": 100,
     "range_item":20
 
-}
+},
+"2":
+{
+    "name": "Fat bob",
+    "attack": 1,
+    "life": 5,
+    "link": "img/game/fat_bob.png",
+    "velocity": 1,
+    "weapon_bullet_max": 210,
+    "attack_cooldown": 100,
+    "range_item":40
 
+}
 }

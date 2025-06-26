@@ -2,7 +2,8 @@ import pygame
 import math
 
 class Player:
-    def __init__(self,screen,link,x,y,life,attack):
+    def __init__(self,screen,link,x,y,life,attack,velocity,weapon_bullet_max,attack_cooldown,range_item):
+       
         self.screen = screen
 
         self.original_image = pygame.image.load(link)
@@ -18,10 +19,10 @@ class Player:
         self.life = self.life_max
 
         self.attack = attack
-        self.velocity = 2
-        self.weapon_bullet_max = 100
+        self.velocity = velocity
+        self.weapon_bullet_max = weapon_bullet_max
         self.weapon_bullet = self.weapon_bullet_max
-        self.attack_cooldown = 100
+        self.attack_cooldown = attack_cooldown
         self.alive = 1
         self.direction = None
         self.can_attack = 1
@@ -36,7 +37,7 @@ class Player:
 
         self.player_in_market = 0 
         self.player_just_bought = 0
-        self.range_item = 20
+        self.range_item = range_item
         self.current_upgrade = {}
 
     def get_level(self,new_xp):
