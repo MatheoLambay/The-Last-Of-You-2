@@ -23,6 +23,13 @@ class gameManager(Map):
         with open('data\stat.json', 'r') as s:
             self.stat_player = json.load(s)
         
+        with open('data\controls.json', 'r') as c:
+            self.controls = json.load(c)
+
+        self.interact = self.controls["interact"]
+        self.items_1 = self.controls["item 1"]
+        self.items_2 = self.controls["item 2"] 
+        self.items_3 = self.controls["item 3"]
         
         #création du joueur et du hud
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
@@ -79,7 +86,7 @@ class gameManager(Map):
     def close(self):
         pass
 
-    def update(self, event, manager):
+    def update(self, key, manager):
 
         if self.player.alive:
 
@@ -148,13 +155,13 @@ class gameManager(Map):
             self.player_in_safezone = 0
 
             """update pnj interaction"""
-            self.pnjs_management(manager)
+            self.pnjs_management(key,manager)
 
             """udpate zombies in list"""
             self.zombies_management()
 
             """player items management"""
-            self.player_items_management()
+            self.player_items_management(key)
             
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
@@ -330,7 +337,7 @@ class gameManager(Map):
                 self.items.pop(self.items.index(i))
 
 
-    def pnjs_management(self,manager):
+    def pnjs_management(self,key,manager):
         for p in self.pnjs:
             # Check if the pnj is on the current map
             if p.map_x == self.map.case_x and p.map_y == self.map.case_y:
@@ -342,13 +349,14 @@ class gameManager(Map):
                     if p.zone_rect.colliderect(self.player.rect):
                         self.player_in_safezone = 1
                         self.player.can_attack = 0
-                        keyboard = pygame.key.get_pressed()
-                        key = keyboard[pygame.K_e]
-                        if key and self.market_button == 0:
-                            self.player.player_in_market = 1
-                            p.openShop(manager,self.player)
-                        self.market_button = key
-                    
+                        # keyboard = pygame.key.get_pressed()
+                        # key = keyboard[pygame.K_e]
+                        if key is not None:
+                            if self.interact == pygame.key.name(key) and self.market_button == 0:
+                                self.player.player_in_market = 1
+                                p.openShop(manager,self.player)
+                            # self.market_button = key
+                        print(key)
                     if self.player.player_just_bought:
                         print("Player just bought an item, resetting market button")
                         self.set_seller_position(p)
@@ -359,18 +367,17 @@ class gameManager(Map):
 
 
 
-    def player_items_management(self):
-        keyboard = pygame.key.get_pressed()
-        
-        if keyboard[pygame.K_1] and self.player.items[0] != 0:
-            if self.player.items[0]["name"] == "turret":
-                self.place_turret(0)
-        if keyboard[pygame.K_2] and self.player.items[1] != 0:
-            if self.player.items[1]["name"] == "turret":
-                self.place_turret(1)
-        if keyboard[pygame.K_3] and self.player.items[2] != 0:
-            if self.player.items[2]["name"] == "turret":
-                self.place_turret(2)
+    def player_items_management(self,key):
+        if key is not None:
+            if self.items_1 == pygame.key.name(key) and self.player.items[0] != 0:
+                if self.player.items[0]["name"] == "turret":
+                    self.place_turret(0)
+            if self.items_2 == pygame.key.name(key) and self.player.items[1] != 0:
+                if self.player.items[1]["name"] == "turret":
+                    self.place_turret(1)
+            if self.items_3 == pygame.key.name(key) and self.player.items[2] != 0:
+                if self.player.items[2]["name"] == "turret":
+                    self.place_turret(2)
             
     def place_turret(self,slot):
         self.turrets.add(Turret(self.screen,self.player.items[slot]["link"],self.player.x,self.player.y,self.map.case_x,self.map.case_y,self.player.items[slot]["damage"],self.player.items[slot]["weapon_bullet"], self.player.items[slot]["range"]))
