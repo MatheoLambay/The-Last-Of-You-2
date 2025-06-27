@@ -10,38 +10,44 @@ class settingsMenu:
 
         with open('data\controls.json', 'r') as s:
             self.controls = json.load(s)
-
         self.controls_save = deepcopy(self.controls)
+
+        with open('data\default_controls.json','r') as d:
+            self.default_controls = json.load(d)
+
 
         self.title_img = pygame.image.load("img\settings_menu\menutitle.png").convert_alpha()
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.save_img = pygame.image.load("img\settings_menu\save_btn.png").convert_alpha()
+        self.reset_img = pygame.image.load("img/settings_menu/reset_btn.png").convert_alpha()
         self.yes_img = pygame.image.load("img\settings_menu\YES.png").convert_alpha()
         self.no_img = pygame.image.load("img/settings_menu/NO.png").convert_alpha()
         
         self.titlerect = self.title_img.get_rect()
         self.titlerect.topleft = (0,0)
-        
-
-        self.background_img = pygame.image.load("img\settings_menu\sbackground.webp").convert_alpha()
-        self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
 
         self.leave_img = pygame.image.load("img\settings_menu\leave_alert.png").convert_alpha()
         self.leave_rect = self.leave_img.get_rect()
-        self.leave_rect.midbottom = (1920 // 2, 1080)
+        self.leave_rect.midtop = (1920//2, 1080)
+        self.target_y = 500
+        self.speed = 20
         
         self.back_button = Button(self.screen,20,900,self.back_img,0.8)
-        self.save_button = Button(self.screen, self.back_button.rect.topright[0], self.back_button.rect.topright[1], self.save_img, 0.8)
+        self.save_button = Button(self.screen, self.back_button.rect.topright[0]+50, self.back_button.rect.topright[1], self.save_img, 0.8)
+        self.reset_button = Button(self.screen, self.save_button.rect.topright[0]+50, self.save_button.rect.topright[1], self.reset_img, 0.8)
+
         self.yes_btn = Button(self.screen, self.leave_rect.center[0]-130, self.leave_rect.center[1]+100, self.yes_img)
         self.no_btn = Button(self.screen, self.leave_rect.center[0]+100, self.leave_rect.center[1]+100, self.no_img)
+        self.target_yes = (self.leave_rect.center[0]-130, self.leave_rect.center[1]+100)
+        self.target_no = (self.leave_rect.center[0]+100, self.leave_rect.center[1]+100)
 
         self.current_touch = None
         self.change_detected = False
         
         self.touch_list = []
         
-        x = 200
-        y = 400
+        x = 120
+        y = self.titlerect.bottomleft[1]+20
         for i in self.controls.items():
             self.touch_list.append(Touch(self.screen, i,x,y))
             y+=60
@@ -62,9 +68,7 @@ class settingsMenu:
             pygame.display.update()
 
     def open(self, screen):
-        
         pass
-
 
     def close(self):
         pass
@@ -73,11 +77,19 @@ class settingsMenu:
         with open('data\controls.json', 'w') as s:
             json.dump(self.controls, s, indent=4)
         self.controls_save = deepcopy(self.controls)
-        
-    def leave_menu(self, manager):
 
+    def leave_menu(self, manager):
         self.fade(manager.screen,1920,1080)
         manager.pop_menu()
+
+    def reset_change(self):
+        self.controls_save = deepcopy(self.default_controls)
+        self.controls = deepcopy(self.default_controls)
+        
+        # for i in range(len(self.touch_list)): 
+        #     self.touch_list[i].touch = list(self.controls.values())[i]
+        #activer reset
+            
 
 
     def update(self, key, manager):
@@ -90,13 +102,22 @@ class settingsMenu:
             i.draw()
         
         if self.change_detected:
-           
+            if self.leave_rect.y > self.target_y:
+                self.leave_rect.y -= self.speed
+                self.yes_btn.rect[1] -= self.speed
+                self.no_btn.rect[1] -= self.speed
+                if self.leave_rect.y < self.target_y:
+                    self.leave_rect.y = self.target_y  # Pour ne pas dépasser
+                    self.yes_btn.rect.center = self.target_yes
+                    self.no_btn.rect.center = self.target_no
+
             self.screen.blit(self.leave_img, self.leave_rect)
             self.yes_btn.draw()
             self.no_btn.draw()
 
         self.save_button.draw()
         self.back_button.draw()
+        self.reset_button.draw()
         
         # detecte quelle touch est en cours de selection
         for i in self.touch_list:
@@ -136,6 +157,9 @@ class settingsMenu:
 
         if self.no_btn.detect():
             self.leave_menu(manager)
+
+        if self.reset_button.detect():
+            self.reset_change()
 
         if self.back_button.detect():
             if self.controls_save != self.controls:
