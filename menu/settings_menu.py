@@ -15,7 +15,6 @@ class settingsMenu:
         with open('data\default_controls.json','r') as d:
             self.default_controls = json.load(d)
 
-
         self.title_img = pygame.image.load("img\settings_menu\menutitle.png").convert_alpha()
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.save_img = pygame.image.load("img\settings_menu\save_btn.png").convert_alpha()
@@ -83,15 +82,11 @@ class settingsMenu:
         manager.pop_menu()
 
     def reset_change(self):
-        self.controls_save = deepcopy(self.default_controls)
         self.controls = deepcopy(self.default_controls)
         
-        # for i in range(len(self.touch_list)): 
-        #     self.touch_list[i].touch = list(self.controls.values())[i]
-        #activer reset
-            
-
-
+        for i in range(len(self.touch_list)): 
+           self.touch_list[i].touch[1] = list(self.controls.values())[i]
+        
     def update(self, key, manager):
         """Met à jour les interactions du menu."""
         self.screen.fill((0,0,0))
@@ -160,12 +155,9 @@ class settingsMenu:
 
         if self.reset_button.detect():
             self.reset_change()
-
+            
         if self.back_button.detect():
             if self.controls_save != self.controls:
                 self.change_detected = True
             else:
                 self.leave_menu(manager)
-        
-
-
