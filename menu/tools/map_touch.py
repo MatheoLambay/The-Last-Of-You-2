@@ -8,6 +8,7 @@ class Touch:
         self.y = y
         self.frame_size = 50
         self.frame_rect = (self.x+(self.frame_size/2), self.y+(self.frame_size/2))
+        self.color = "black"
         # self.is_select = False
        
     def draw(self):
@@ -28,7 +29,7 @@ class Touch:
 
     def draw_default_touch(self):
         pygame.draw.rect(self.screen,"white", (self.x,self.y, self.frame_size,self.frame_size))
-        pygame.draw.rect(self.screen,"black", (self.x+2,self.y+2, self.frame_size-4,self.frame_size-4))
+        pygame.draw.rect(self.screen,self.color, (self.x+2,self.y+2, self.frame_size-4,self.frame_size-4))
         font = pygame.font.Font("The Last Of Us Rough.ttf", 40)
         self.touch_text = font.render(self.touch[1], True, (255,255,255))
         self.touch_text_rect = self.touch_text.get_rect(center=(self.frame_rect[0], self.frame_rect[1]))
@@ -36,7 +37,7 @@ class Touch:
 
     def draw_select_touch(self):
         pygame.draw.rect(self.screen,"white", (self.x,self.y, self.frame_size,self.frame_size))
-        pygame.draw.rect(self.screen,"black", (self.x+2,self.y+2, self.frame_size-4,self.frame_size-4))
+        pygame.draw.rect(self.screen,self.color, (self.x+2,self.y+2, self.frame_size-4,self.frame_size-4))
         font = pygame.font.Font("The Last Of Us Rough.ttf", 40)
         self.touch_text = font.render("__", True, (255,255,255))
         self.touch_text_rect = self.touch_text.get_rect(center=(self.frame_rect[0], self.frame_rect[1]))
