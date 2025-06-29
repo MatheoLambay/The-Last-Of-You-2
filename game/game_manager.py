@@ -14,7 +14,7 @@ from button import Button
 
 class gameManager(Map):
     
-    def __init__(self,screen,player):
+    def __init__(self,screen,player,texture_map):
         self.screen = screen
 
         with open("data\zombie.json", 'r') as f:
@@ -37,10 +37,11 @@ class gameManager(Map):
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
+
         #mpa 2x4
         #texture_map = (("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png"),("img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png"))
         #map 3X3
-        texture_map = (("img\game\map1.png","img\game\map2.png","img\game\map3.png"),("img\game\map4.png","img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png","img\game\map9.png"))
+        #texture_map = (("img\game\map1.png","img\game\map2.png","img\game\map3.png"),("img\game\map4.png","img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png","img\game\map9.png"))
         
         #création de la map
         self.map = Map(screen,texture_map)

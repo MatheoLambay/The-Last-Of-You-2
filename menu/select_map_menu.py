@@ -1,30 +1,27 @@
 import pygame
 from button import Button
-from menu.tools.select_player import selectPlayer
-from menu.select_map_menu import selectMapMenu
+from game.game_manager import gameManager
+from menu.tools.map_ping import Pin
 import json
 
 
-class selectModeMenu:
-    def __init__(self,screen):
+class selectMapMenu:
+    def __init__(self,screen,player):
         self.screen = screen
+        self.player = player
 
         with open('data\players.json', 'r') as p:
             self.players_stats = json.load(p)
 
-        """Chargement des images et initialisation des boutons."""
-        self.list_players = []
-        x = 150
-        y = 60
-        for i in range(len(self.players_stats)):
-            new_player = selectPlayer(self.screen,self.players_stats[str(i+1)], x, y)
-            self.list_players.append(new_player)
-            x = new_player.get_top_right()[0] + 10
-
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
-        self.background_img = pygame.image.load("img\select_mode_menu\sbackground.png").convert_alpha()
+        self.background_img = pygame.image.load("img\select_mode_menu\map.png").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
         self.back_button = Button(screen,20,900,self.back_img,0.8)
+
+
+        self.pin1 = Pin(self.screen,200,200,(("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png")))
+        self.pin2 = Pin(self.screen,300,300,(("img\game\map1.png",),("img\game\map2.png",),("img\game\map3.png",),("img\game\map4.png",)))
+        self.pins = (self.pin1,self.pin2)
         
 
     def fade(self,screen,SCREENWIDTH, SCREENHEIGHT): 
@@ -47,11 +44,11 @@ class selectModeMenu:
         backgroungrect = self.background_img.get_rect()
         backgroungrect.topleft = (0,0)
         screen.blit(self.background_img, backgroungrect)
-
+        for i in self.pins:
+            i.draw()
         self.back_button.draw()
-        for player in self.list_players:
-            player.draw_affich()
 
+        
     def close(self):
         pass
 
@@ -60,10 +57,10 @@ class selectModeMenu:
         if self.back_button.detect():
             self.fade(manager.screen,1920,1080)
             manager.pop_menu()
-
-        for player in self.list_players:
-            if(player.detect()):
+        
+        for i in self.pins:
+            if i.detect():
                 self.fade(manager.screen,1920,1080)
-                # manager.push_menu(gameManager(self.screen, player.player))
-                manager.push_menu(selectMapMenu(self.screen,player.player))
-      
+                manager.push_menu(gameManager(self.screen,self.player,i.maps_cases))
+
+       

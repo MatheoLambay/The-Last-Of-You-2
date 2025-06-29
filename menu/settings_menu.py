@@ -173,10 +173,12 @@ class settingsMenu:
             self.yes_btn.draw()
             self.no_btn.draw()
             self.cancel_btn.draw()
+            self.save_button.draw()
+            self.reset_button.draw()
 
-        self.save_button.draw()
+        
         self.back_button.draw()
-        self.reset_button.draw()
+        
         
         # detecte quelle touche est en cours de selection
         for i in self.touch_list:
@@ -206,7 +208,7 @@ class settingsMenu:
                 self.controls[self.current_touch.touch[0]] = self.current_touch.touch[1]
                 self.current_touch = None
 
-        if self.save_button.detect():
+        if self.save_button.detect() and not self.change_detected:
             self.save_change()
             for touch in self.touch_list:
                 touch.color = "black"
@@ -221,8 +223,10 @@ class settingsMenu:
         if self.no_btn.detect():
             self.leave_menu(manager)
 
-        if self.reset_button.detect():
+        if self.reset_button.detect() and not self.change_detected:
             self.reset_change()
+            for touch in self.touch_list:
+                touch.color = "black"
             
         if self.back_button.detect():
             if self.controls_save != self.controls:
