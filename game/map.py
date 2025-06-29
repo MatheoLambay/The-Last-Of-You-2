@@ -12,8 +12,7 @@ class Map:
         self.max_case_y = len(self.texture)-1
         self.case_x = 0
         self.case_y = 0
-        print(texture)
-        
+    
         self.border = {"up":0,"down":0,"left":0,"right":0}
 
         self.load_map()
@@ -23,7 +22,6 @@ class Map:
         for y in self.texture:
             current_row = []
             for x in y:
-                print(x)
                 current_row.append(pygame.image.load(x).convert_alpha())
             self.map.append(current_row)
         print(self.map)

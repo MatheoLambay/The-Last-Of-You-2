@@ -14,12 +14,12 @@ class selectModeMenu:
 
         """Chargement des images et initialisation des boutons."""
         self.list_players = []
-        x = 150
+        x = 100
         y = 60
         for i in range(len(self.players_stats)):
             new_player = selectPlayer(self.screen,self.players_stats[str(i+1)], x, y)
             self.list_players.append(new_player)
-            x = new_player.get_top_right()[0] + 10
+            x = new_player.get_top_right()[0] 
 
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.background_img = pygame.image.load("img\select_mode_menu\sbackground.png").convert_alpha()
