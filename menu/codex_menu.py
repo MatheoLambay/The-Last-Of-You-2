@@ -9,8 +9,8 @@ class codexMenu:
         self.codex_rect = self.codex_img.get_rect()
         self.codex_rect.center = (1920/2,100)
 
-        self.background_img = pygame.image.load("img\settings_menu\sbackground.webp").convert_alpha()
-        self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
+        # self.background_img = pygame.image.load("img\settings_menu\sbackground.webp").convert_alpha()
+        # self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
 
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.back_button = Button(self.screen,20,900,self.back_img,0.8)
