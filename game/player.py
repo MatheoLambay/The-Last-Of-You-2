@@ -1,10 +1,19 @@
 import pygame
 import math
+import json
 
 class Player:
     def __init__(self,screen,link,x,y,life,attack,velocity,weapon_bullet_max,attack_cooldown,range_item):
        
         self.screen = screen
+
+        with open('data\controls.json', 'r') as c:
+            self.controls = json.load(c)
+
+        self.up = self.controls["up"]
+        self.down = self.controls["down"]
+        self.left = self.controls["left"]
+        self.right = self.controls["right"]
 
         self.original_image = pygame.image.load(link)
         self.original_image = pygame.transform.scale(self.original_image, (250 // 2, 250 // 2))
@@ -68,10 +77,10 @@ class Player:
             self.rect = self.image.get_rect(center=self.rect.center)
 
     
-    def move(self,key,border):
+    def move(self,border):
         
         if self.alive:
-            if key[pygame.K_z]:
+            if pygame.key.get_pressed()[pygame.key.key_code(self.up)]:
                 self.direction = "u"
                 if self.y > 0:
                     self.y -= 1 * self.velocity
@@ -79,7 +88,7 @@ class Player:
                     self.y = 1080
                     return "u"
                     
-            if key[pygame.K_s]:
+            if pygame.key.get_pressed()[pygame.key.key_code(self.down)]:
                 self.direction = "d"
                 if self.y < 1080:
                     self.y += 1 * self.velocity
@@ -87,7 +96,7 @@ class Player:
                     self.y = 0
                     return "d"
 
-            if key[pygame.K_d]:
+            if pygame.key.get_pressed()[pygame.key.key_code(self.right)]:
                 self.direction = "r"
                 if self.x < 1920:
                     self.x += 1 * self.velocity
@@ -95,7 +104,7 @@ class Player:
                     self.x = 0
                     return "r"
             
-            if key[pygame.K_q]:
+            if pygame.key.get_pressed()[pygame.key.key_code(self.left)]:
                 self.direction = "l"
                 if self.x > 0:
                     self.x -= 1 * self.velocity

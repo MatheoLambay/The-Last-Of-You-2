@@ -1,4 +1,8 @@
 {
+    "up":"z",
+    "down":"s",
+    "left":"q",
+    "right":"d",
     "interact": "e",
     "item 1": "1",
     "item 2": "2",

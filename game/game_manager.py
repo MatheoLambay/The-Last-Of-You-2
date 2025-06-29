@@ -30,12 +30,13 @@ class gameManager(Map):
         self.items_1 = self.controls["item 1"]
         self.items_2 = self.controls["item 2"] 
         self.items_3 = self.controls["item 3"]
+     
+        
         
         #création du joueur et du hud
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
-    
         #mpa 2x4
         #texture_map = (("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png"),("img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png"))
         #map 3X3
@@ -123,7 +124,7 @@ class gameManager(Map):
                 self.last_zombie_time = current_time 
                     
             """player move, hud"""
-            map_position = self.player.move(pygame.key.get_pressed(),self.border)
+            map_position = self.player.move(self.border)
             self.player_bar.move(self.player.rect.bottomleft[0],self.player.rect.bottomleft[1])
 
             """detect map change"""
@@ -155,13 +156,13 @@ class gameManager(Map):
             self.player_in_safezone = 0
 
             """update pnj interaction"""
-            self.pnjs_management(key,manager)
+            self.pnjs_management(manager)
 
             """udpate zombies in list"""
             self.zombies_management()
 
             """player items management"""
-            self.player_items_management(key)
+            self.player_items_management()
             
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
@@ -337,7 +338,7 @@ class gameManager(Map):
                 self.items.pop(self.items.index(i))
 
 
-    def pnjs_management(self,key,manager):
+    def pnjs_management(self,manager):
         for p in self.pnjs:
             # Check if the pnj is on the current map
             if p.map_x == self.map.case_x and p.map_y == self.map.case_y:
@@ -348,15 +349,12 @@ class gameManager(Map):
                     # detecte si le joueur est dans la zone de sécurité
                     if p.zone_rect.colliderect(self.player.rect):
                         self.player_in_safezone = 1
-                        self.player.can_attack = 0
-                        # keyboard = pygame.key.get_pressed()
-                        # key = keyboard[pygame.K_e]
-                        if key is not None:
-                            if self.interact == pygame.key.name(key) and self.market_button == 0:
-                                self.player.player_in_market = 1
-                                p.openShop(manager,self.player)
-                            # self.market_button = key
-                        print(key)
+                        self.player.can_attack = 0                      
+                        if pygame.key.get_pressed()[pygame.key.key_code(self.interact)] and self.market_button == 0:
+                            self.player.player_in_market = 1
+                            p.openShop(manager,self.player)
+                            
+                        
                     if self.player.player_just_bought:
                         print("Player just bought an item, resetting market button")
                         self.set_seller_position(p)
@@ -367,17 +365,17 @@ class gameManager(Map):
 
 
 
-    def player_items_management(self,key):
-        if key is not None:
-            if self.items_1 == pygame.key.name(key) and self.player.items[0] != 0:
-                if self.player.items[0]["name"] == "turret":
-                    self.place_turret(0)
-            if self.items_2 == pygame.key.name(key) and self.player.items[1] != 0:
-                if self.player.items[1]["name"] == "turret":
-                    self.place_turret(1)
-            if self.items_3 == pygame.key.name(key) and self.player.items[2] != 0:
-                if self.player.items[2]["name"] == "turret":
-                    self.place_turret(2)
+    def player_items_management(self):
+        
+        if pygame.key.get_pressed()[pygame.key.key_code(self.items_1)] and self.player.items[0] != 0:
+            if self.player.items[0]["name"] == "turret":
+                self.place_turret(0)
+        if pygame.key.get_pressed()[pygame.key.key_code(self.items_2)] and self.player.items[1] != 0:
+            if self.player.items[1]["name"] == "turret":
+                self.place_turret(1)
+        if pygame.key.get_pressed()[pygame.key.key_code(self.items_3)] and self.player.items[2] != 0:
+            if self.player.items[2]["name"] == "turret":
+                self.place_turret(2)
             
     def place_turret(self,slot):
         self.turrets.add(Turret(self.screen,self.player.items[slot]["link"],self.player.x,self.player.y,self.map.case_x,self.map.case_y,self.player.items[slot]["damage"],self.player.items[slot]["weapon_bullet"], self.player.items[slot]["range"]))
