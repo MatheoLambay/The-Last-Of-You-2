@@ -3,6 +3,7 @@ from button import Button
 from menu.tools.map_touch import Touch
 import json
 from copy import deepcopy
+from menu.tools.zombie_settings import zombieSettings
 
 class settingsMenu:
     def __init__(self,screen):
@@ -16,18 +17,22 @@ class settingsMenu:
             self.default_controls = json.load(d)
 
         self.title_img = pygame.image.load("img\settings_menu\menutitle.png").convert_alpha()
+        self.titlerect = self.title_img.get_rect()
+        self.titlerect.topleft = (0,0)
+
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.save_img = pygame.image.load("img\settings_menu\save_btn.png").convert_alpha()
         self.reset_img = pygame.image.load("img/settings_menu/reset_btn.png").convert_alpha()
         self.yes_img = pygame.image.load("img\settings_menu\YES.png").convert_alpha()
         self.no_img = pygame.image.load("img/settings_menu/NO.png").convert_alpha()
         
-        self.titlerect = self.title_img.get_rect()
-        self.titlerect.topleft = (0,0)
 
-        self.leave_img = pygame.image.load("img\settings_menu\leave_alert.png").convert_alpha()
-        self.leave_rect = self.leave_img.get_rect()
-        self.leave_rect.midtop = (1920//2, 1080)
+        self.zombie = zombieSettings(self.screen,"img/settings_menu/zombie_body.png","img/settings_menu/zombie_arm.png",1920//2,1080)
+        self.target_zombie_y = self.zombie.zombie_body_img_rect.y + 1000
+
+        self.leave_zombie_img = pygame.image.load("img\settings_menu\leave_alert.png").convert_alpha()
+        self.leave_zombie_rect = self.leave_zombie_img.get_rect()
+        self.leave_zombie_rect.midtop = (1920//2, 1080)
         self.target_y = 500
         self.speed = 20
         
@@ -35,10 +40,10 @@ class settingsMenu:
         self.save_button = Button(self.screen, self.back_button.rect.topright[0]+50, self.back_button.rect.topright[1], self.save_img, 0.8)
         self.reset_button = Button(self.screen, self.save_button.rect.topright[0]+50, self.save_button.rect.topright[1], self.reset_img, 0.8)
 
-        self.yes_btn = Button(self.screen, self.leave_rect.center[0]-130, self.leave_rect.center[1]+100, self.yes_img)
-        self.no_btn = Button(self.screen, self.leave_rect.center[0]+100, self.leave_rect.center[1]+100, self.no_img)
-        self.target_yes = (self.leave_rect.center[0]-130, self.leave_rect.center[1]+100)
-        self.target_no = (self.leave_rect.center[0]+100, self.leave_rect.center[1]+100)
+        self.yes_btn = Button(self.screen, self.leave_zombie_rect.center[0]-130, self.leave_zombie_rect.center[1]+100, self.yes_img)
+        self.no_btn = Button(self.screen, self.leave_zombie_rect.center[0]+100, self.leave_zombie_rect.center[1]+100, self.no_img)
+        self.target_yes = (self.leave_zombie_rect.center[0]-130, self.leave_zombie_rect.center[1]+100)
+        self.target_no = (self.leave_zombie_rect.center[0]+100, self.leave_zombie_rect.center[1]+100)
 
         self.current_touch = None
         self.change_detected = False
@@ -90,23 +95,34 @@ class settingsMenu:
     def update(self, key, manager):
         """Met à jour les interactions du menu."""
         self.screen.fill((0,0,0))
-
         self.screen.blit(self.title_img, self.titlerect)
-
+        self.zombie.draw()
+        self.zombie.point_at(pygame.mouse.get_pos())
+        
+        
         for i in self.touch_list:
             i.draw()
         
         if self.change_detected:
-            if self.leave_rect.y > self.target_y:
-                self.leave_rect.y -= self.speed
-                self.yes_btn.rect[1] -= self.speed
-                self.no_btn.rect[1] -= self.speed
-                if self.leave_rect.y < self.target_y:
-                    self.leave_rect.y = self.target_y  # Pour ne pas dépasser
-                    self.yes_btn.rect.center = self.target_yes
-                    self.no_btn.rect.center = self.target_no
+            #en bas zombie avec bras
+            if self.zombie.zombie_body_img_rect.y < self.target_zombie_y:
+                self.zombie.zombie_body_img_rect.y += self.speed
+                self.zombie.zombie_arm_img_rect.y += self.speed
+                if self.zombie.zombie_body_img_rect.y > self.target_zombie_y:
+                    self.zombie.zombie_body_img_rect.y = self.target_zombie_y 
+                    self.zombie.zombie_arm_img_rect.y = self.target_zombie_y 
+            else:
+                #en haut zombie avec bras
+                if self.leave_zombie_rect.y > self.target_y:
+                    self.leave_zombie_rect.y -= self.speed
+                    self.yes_btn.rect[1] -= self.speed
+                    self.no_btn.rect[1] -= self.speed
+                    if self.leave_zombie_rect.y < self.target_y:
+                        self.leave_zombie_rect.y = self.target_y  # Pour ne pas dépasser
+                        self.yes_btn.rect.center = self.target_yes
+                        self.no_btn.rect.center = self.target_no
 
-            self.screen.blit(self.leave_img, self.leave_rect)
+            self.screen.blit(self.leave_zombie_img, self.leave_zombie_rect)
             self.yes_btn.draw()
             self.no_btn.draw()
 
