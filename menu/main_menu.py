@@ -13,10 +13,10 @@ class mainMenu:
         self.stat_img = pygame.image.load("img\main_menu\stat_btn.png").convert_alpha()
         self.codex_img = pygame.image.load("img\main_menu\codex_btn.png").convert_alpha()
 
-        self.start_button = Button(self.screen,1920/100,200,self.start_img)
-        self.stat_button = Button(self.screen,1920/100,350,self.stat_img)
-        self.settings_button = Button(self.screen,1920/100,500,self.settings_img)
-        self.codex_button = Button(self.screen,1920/100,650,self.codex_img)
+        self.start_button = Button(self.screen,703,455,self.start_img,0.5)
+        self.stat_button = Button(self.screen,1558,711,self.stat_img,0.5)
+        self.settings_button = Button(self.screen,26,746,self.settings_img,0.5)
+        self.codex_button = Button(self.screen,130,127,self.codex_img,0.5)
 
         self.exit_button = Button(self.screen,20,900,self.exit_img,0.8)
         
@@ -59,6 +59,8 @@ class mainMenu:
         pass
 
     def update(self, event, manager):
+
+        print(pygame.mouse.get_pos())
         if self.exit_button.detect():
             pygame.quit()
             quit()
