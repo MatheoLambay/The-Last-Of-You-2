@@ -60,7 +60,6 @@ class mainMenu:
 
     def update(self, event, manager):
 
-        print(pygame.mouse.get_pos())
         if self.exit_button.detect():
             pygame.quit()
             quit()

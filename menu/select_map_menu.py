@@ -16,10 +16,10 @@ class selectMapMenu:
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.background_img = pygame.image.load("img\select_mode_menu\map.png").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
-        self.back_button = Button(screen,20,900,self.back_img,center_pos="center")
+        self.back_button = Button(screen,0,1080,self.back_img,center_pos="bottomleft")
 
 
-        self.pin1 = Pin(self.screen,200,200,(("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png")))
+        self.pin1 = Pin(self.screen,1281,324,(("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png")))
         self.pin2 = Pin(self.screen,300,300,(("img\game\map1.png",),("img\game\map2.png",),("img\game\map3.png",),("img\game\map4.png",)))
         self.pins = (self.pin1,self.pin2)
         
@@ -54,6 +54,9 @@ class selectMapMenu:
 
     def update(self, event, manager):
         """Met à jour les interactions du menu."""
+
+        print(pygame.mouse.get_pos())
+
         if self.back_button.detect():
             self.fade(manager.screen,1920,1080)
             manager.pop_menu()

@@ -15,6 +15,8 @@ class Button():
 			self.rect.topright = (x,y)
 		elif center_pos == "bottomright":
 			self.rect.bottomright = (x,y)
+		elif center_pos == "bottomleft":
+			self.rect.bottomleft = (x,y)
 		elif center_pos == "center":
 			self.rect.center = (x,y)
 		self.clicked = False
