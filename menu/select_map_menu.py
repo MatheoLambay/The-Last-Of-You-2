@@ -16,7 +16,7 @@ class selectMapMenu:
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.background_img = pygame.image.load("img\select_mode_menu\map.png").convert_alpha()
         self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
-        self.back_button = Button(screen,20,900,self.back_img,0.8)
+        self.back_button = Button(screen,20,900,self.back_img,center_pos="center")
 
 
         self.pin1 = Pin(self.screen,200,200,(("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png")))

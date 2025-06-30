@@ -1,11 +1,11 @@
 import pygame
 from menu_manager import menuManager
-from menu.main_menu import mainMenu
+from menu.presentation_menu import presentationMenu
 
 pygame.init()
 pygame.font.init()
 menu_manager = menuManager()
-menu_manager.push_menu(mainMenu(menu_manager.screen))
+menu_manager.push_menu(presentationMenu(menu_manager.screen))
 
 run = True
 while run:
