@@ -6,6 +6,16 @@ class Player:
     def __init__(self,screen,link,x,y,life,attack,velocity,weapon_bullet_max,attack_cooldown,range_item):
        
         self.screen = screen
+        self.x = x
+        self.y = y     
+        self.life_max = life
+        self.life = self.life_max
+
+        self.attack = attack
+        self.velocity = velocity
+        self.weapon_bullet_max = weapon_bullet_max
+        self.weapon_bullet = self.weapon_bullet_max
+        self.attack_cooldown = attack_cooldown
 
         with open('data\controls.json', 'r') as c:
             self.controls = json.load(c)
@@ -18,20 +28,15 @@ class Player:
         self.original_image = pygame.image.load(link)
         self.original_image = pygame.transform.scale(self.original_image, (250 // 2, 250 // 2))
         self.image = self.original_image
+
+        
+        # self.hitbox = pygame.draw.rect(self.screen,"red",(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width()),10)
+        self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.angle = 0
 
-        self.x = x
-        self.y = y     
-        self.life_max = life
-        self.life = self.life_max
-
-        self.attack = attack
-        self.velocity = velocity
-        self.weapon_bullet_max = weapon_bullet_max
-        self.weapon_bullet = self.weapon_bullet_max
-        self.attack_cooldown = attack_cooldown
+       
         self.alive = 1
         self.direction = None
         self.can_attack = 1
@@ -113,13 +118,42 @@ class Player:
                     return "l"
             
             self.rect.center = (self.x,self.y)
+            self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
             return None
      
+    def collision(self, rect2):
+        # Gère le cas où rect2 est un pygame.Rect directement
+        target_rect = rect2.rect if hasattr(rect2, 'rect') else rect2
+
+        if self.hitbox.colliderect(target_rect):
+            overlap_x = min(self.hitbox.right - target_rect.left, target_rect.right - self.hitbox.left)
+            overlap_y = min(self.hitbox.bottom - target_rect.top, target_rect.bottom - self.hitbox.top)
+
+            if overlap_x < overlap_y:  # Collision dominante sur l'axe horizontal
+                if self.hitbox.centerx < target_rect.centerx:
+                    self.x = target_rect.left - self.hitbox.width / 2
+                else:
+                    self.x = target_rect.right + self.hitbox.width / 2
+            else:  # Collision dominante sur l'axe vertical
+                if self.hitbox.centery < target_rect.centery:
+                    self.y = target_rect.top - self.hitbox.height / 2
+                else:
+                    self.y = target_rect.bottom + self.hitbox.height / 2
+
+            # Mettre à jour la hitbox après repositionnement
+            self.hitbox = pygame.Rect(
+                self.x - self.original_image.get_height() // 2,
+                self.y - self.original_image.get_width() // 2,
+                self.original_image.get_height(),
+                self.original_image.get_width()
+            )
+
     def Attack(self,cible):
         if self.alive:
             cible.life -= self.attack
 
-    
     def draw(self):
         self.screen.blit(self.image,self.rect)
+        pygame.draw.rect(self.screen,"red",self.hitbox,width=1)
 
+    

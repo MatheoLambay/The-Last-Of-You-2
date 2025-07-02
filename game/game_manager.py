@@ -37,7 +37,7 @@ class gameManager(Map):
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
 
-
+        
         #mpa 2x4
         #texture_map = (("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png"),("img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png"))
         #map 3X3
@@ -78,6 +78,7 @@ class gameManager(Map):
 
         pnj_spawn = self.map.get_random_case()
         self.pnjs.append(ShopPnj(self.screen,"img\game\Seller.png",random.randint(100,1820),random.randint(100,980),pnj_spawn[0],pnj_spawn[1],"seller"))
+
         
 
     def open(self, screen):
@@ -126,7 +127,7 @@ class gameManager(Map):
                     
             """player move, hud"""
             map_position = self.player.move(self.border)
-            self.player_bar.move(self.player.rect.bottomleft[0],self.player.rect.bottomleft[1])
+            self.player_bar.move(self.player.hitbox.bottomleft[0],self.player.hitbox.bottomleft[1])
 
             """detect map change"""
             if map_position != None:
@@ -167,7 +168,11 @@ class gameManager(Map):
             
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
-            
+
+            test = pygame.Rect(100,100,200,100)
+            pygame.draw.rect(self.screen,"green",test)
+            self.player.collision(test)
+
         else:
             
             if self.death_animation_flag:
@@ -362,7 +367,7 @@ class gameManager(Map):
                         self.player.player_just_bought = 0
                     
                 """Gestion de collision avec le joueur"""
-                p.collision(self.player)
+                self.player.collision(p)
 
 
 
