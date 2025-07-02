@@ -9,7 +9,9 @@ from game.hud import Hud
 from game.turret import Turret
 from game.items import *
 from game.ShopPnj import ShopPnj
+from game.BOSS.madmax import madmax
 from button import Button
+
 
 
 class gameManager(Map):
@@ -36,7 +38,7 @@ class gameManager(Map):
         #création du joueur et du hud
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
-
+        
         
         #mpa 2x4
         #texture_map = (("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png"),("img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png"))
@@ -79,7 +81,8 @@ class gameManager(Map):
         pnj_spawn = self.map.get_random_case()
         self.pnjs.append(ShopPnj(self.screen,"img\game\Seller.png",random.randint(100,1820),random.randint(100,980),pnj_spawn[0],pnj_spawn[1],"seller"))
 
-        
+        self.mad_max = madmax(self.screen,self.zombies)
+        self.boss_actif = 0
 
     def open(self, screen):
         screen.fill((255,255,255))
@@ -165,13 +168,24 @@ class gameManager(Map):
 
             """player items management"""
             self.player_items_management()
+
+            if self.player.score > 10:
+                self.boss_actif = 1
+                self.mad_max.apparition()
+                for w in self.mad_max.walls:
+                    self.player.collision(w)
+                
+                self.mad_max.point_at((self.player.x,self.player.y))
+                self.mad_max.move_to(self.player.x,self.player.y)
+                self.mad_max.poison_attack()
+                self.mad_max.draw()
+
+               
             
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
 
-            test = pygame.Rect(100,100,200,100)
-            pygame.draw.rect(self.screen,"green",test)
-            self.player.collision(test)
+            
 
         else:
             
@@ -294,12 +308,18 @@ class gameManager(Map):
 
 
     def bullets_management(self):
+
         for b in self.bullet:
             b.fire()
             if b.x > 1920 or b.x < 0 or b.y > 1080 or b.y < 0:
                 self.bullet.pop(self.bullet.index(b))
             else:
                 b.draw()
+
+                if (b.rect.colliderect(self.mad_max.rect) and self.boss_actif):
+                    self.player.Attack(self.mad_max)
+                    self.bullet.pop(self.bullet.index(b))
+
                 for z in self.zombies:
                     if( z.x - 20 <= b.x <= z.x + 20 and z.y - 20 <= b.y <= z.y + 20):
                         
@@ -353,7 +373,7 @@ class gameManager(Map):
 
                 if p.name == "seller" or p.name == "safezone":
                     # detecte si le joueur est dans la zone de sécurité
-                    if p.zone_rect.colliderect(self.player.rect):
+                    if self.player.hitbox.colliderect(p.zone_rect):
                         self.player_in_safezone = 1
                         self.player.can_attack = 0                      
                         if pygame.key.get_pressed()[pygame.key.key_code(self.interact)] and self.market_button == 0:
