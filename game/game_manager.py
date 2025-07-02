@@ -1,6 +1,7 @@
 import pygame
 import random
 import json
+import math
 from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
@@ -39,12 +40,6 @@ class gameManager(Map):
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
         
-        
-        #mpa 2x4
-        #texture_map = (("img\game\map1.png","img\game\map2.png"),("img\game\map3.png","img\game\map4.png"),("img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png"))
-        #map 3X3
-        #texture_map = (("img\game\map1.png","img\game\map2.png","img\game\map3.png"),("img\game\map4.png","img\game\map5.png","img\game\map6.png"),("img\game\map7.png","img\game\map8.png","img\game\map9.png"))
-        
         #création de la map
         self.map = Map(screen,texture_map)
         self.border = self.map.map_border()
@@ -52,9 +47,15 @@ class gameManager(Map):
 
         self.bullet = []
         self.zombies = pygame.sprite.Group()
+        self.boss = pygame.sprite.Group()
         self.items = []
         self.pnjs = []
         self.turrets = pygame.sprite.Group()
+
+        self.combined_group = pygame.sprite.Group()
+        self.combined_group.add(self.zombies)
+        self.combined_group.add(self.boss)
+
 
         self.last_bullet_time = 0
         self.bullet_interval = self.player.attack_cooldown
@@ -70,6 +71,8 @@ class gameManager(Map):
         # statistiques du joueur (temps)
         self.last_play_time = 0
         self.play_interval = 1000
+
+       
 
         self.time_played = 0
         self.zombie_killed = {"greendead":0,"bluedead":0,"reddead":0,"yellowdead":0}
@@ -94,8 +97,8 @@ class gameManager(Map):
 
     def update(self, key, manager):
 
-        if self.player.alive:
-
+        if self.player.is_alive:
+            
             self.screen.fill((255,255,255))
             self.screen.blit(self.background,(0,0))
 
@@ -122,6 +125,8 @@ class gameManager(Map):
                 if current_time - self.last_bullet_time >= self.bullet_interval and self.player.can_attack:
                     self.new_bullet(mouse_pos,self.player)
                     self.last_bullet_time = current_time 
+            elif mouse_click[2]:
+               self.player.cac_attack = 1
 
             """spawn zombie"""
             if current_time - self.last_zombie_time >= self.zombie_interval and not(self.player_in_safezone):
@@ -169,23 +174,16 @@ class gameManager(Map):
             """player items management"""
             self.player_items_management()
 
-            if self.player.score > 10:
-                self.boss_actif = 1
-                self.mad_max.apparition()
-                for w in self.mad_max.walls:
-                    self.player.collision(w)
-                
-                self.mad_max.point_at((self.player.x,self.player.y))
-                self.mad_max.move_to(self.player.x,self.player.y)
-                self.mad_max.poison_attack()
-                self.mad_max.draw()
 
-               
-            
+            self.boss_management()
+            if self.player.score > 9:
+                self.boss.add(self.mad_max)
+
+            """player life"""
+            self.player_management()
+
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
-
-            
 
         else:
             
@@ -428,7 +426,28 @@ class gameManager(Map):
                 if current_time - self.last_damage_time >= self.damage_interval:
                     z.Attack(self.player)
                     self.last_damage_time = current_time
-                    if self.player.life < 1:
-                        with open("data/stat.json", 'w') as w:
-                            json.dump(self.stat_player, w)
-                        self.player.alive = 0
+
+    
+    def boss_management(self):
+        self.boss.update(self.player)
+        [b.kill() for b in self.boss if b.life < 1]
+            
+
+
+    def player_management(self):
+        if self.player.life < 1:
+            with open("data/stat.json", 'w') as w:
+                json.dump(self.stat_player, w)
+            self.player.is_alive = 0
+        else:
+            self.combined_group = pygame.sprite.Group()
+            self.combined_group.add(self.zombies)
+            self.combined_group.add(self.boss)
+            self.player.cac_Attack(self.combined_group)
+                # for z in self.zombies:
+                #     if z.rect.colliderect(rect):
+                #         z.life -=1
+
+                
+                
+            

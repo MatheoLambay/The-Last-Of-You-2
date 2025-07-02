@@ -1,7 +1,7 @@
 # The-Last-Of-You-2
 
-* presentation
-* part 2
-* appuyer sur une touche pour continuer
-* image de nuit
+* poison dégat
+* boss dégat
+* poison despawn
+* drop ammo pendant fight
 

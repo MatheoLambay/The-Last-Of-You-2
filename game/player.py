@@ -2,7 +2,7 @@ import pygame
 import math
 import json
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self,screen,link,x,y,life,attack,velocity,weapon_bullet_max,attack_cooldown,range_item):
        
         self.screen = screen
@@ -29,15 +29,20 @@ class Player:
         self.original_image = pygame.transform.scale(self.original_image, (250 // 2, 250 // 2))
         self.image = self.original_image
 
+         #interval et animation càc joueur
+        self.frame_index = 0
+        self.last_frame_time = 0
+        self.frame_interval = 50
+        self.cac_attack = 0
         
         # self.hitbox = pygame.draw.rect(self.screen,"red",(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width()),10)
         self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.angle = 0
+        self.adjusted_angle = 0
 
-       
-        self.alive = 1
+        self.is_alive = 1
         self.direction = None
         self.can_attack = 1
         self.gold = 0
@@ -71,10 +76,10 @@ class Player:
             self.angle = math.degrees(math.atan2(dy, dx))  # dy is positive because Pygame's y-axis increases downward
             
             # Adjust the angle if the default orientation is downward
-            adjusted_angle = self.angle - 90  # Subtract 90 degrees if the sprite points down by default
+            self.adjusted_angle = self.angle - 90  # Subtract 90 degrees if the sprite points down by default
             
             # Rotate the image
-            rotated_image = pygame.transform.rotate(self.original_image, -adjusted_angle)  # Negative angle for Pygame's rotation direction
+            rotated_image = pygame.transform.rotate(self.original_image, -self.adjusted_angle)  # Negative angle for Pygame's rotation direction
             
             # Update the rect to keep it centered
             self.image = rotated_image
@@ -147,6 +152,49 @@ class Player:
                 self.original_image.get_height(),
                 self.original_image.get_width()
             )
+
+    def cac_Attack(self,combined_group):
+        if self.cac_attack:
+            cac_pattern = [
+                pygame.image.load("img/game/player/frame_1.png").convert_alpha(),
+                pygame.image.load("img/game/player/frame_2.png").convert_alpha(),
+                pygame.image.load("img/game/player/frame_3.png").convert_alpha(),
+                pygame.image.load("img/game/player/frame_4.png").convert_alpha(),
+                pygame.image.load("img/game/player/frame_5.png").convert_alpha(),
+                pygame.image.load("img/game/player/frame_6.png").convert_alpha(),
+                pygame.image.load("img/game/player/frame_7.png").convert_alpha()
+            ]
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_frame_time >= self.frame_interval:
+                if self.frame_index < len(cac_pattern)-1:
+                    self.frame_index +=1
+                self.last_frame_time = current_time
+
+            spawn_pos = None
+            offset = 80  
+            angle_rad = math.radians(self.angle)  
+            dir_vector = pygame.Vector2(math.cos(angle_rad), math.sin(angle_rad))
+            spawn_pos = pygame.Vector2(self.x, self.y) + dir_vector * offset
+            
+            rotated_image = pygame.transform.rotate(cac_pattern[self.frame_index], -self.adjusted_angle)
+            rect = rotated_image.get_rect(center=spawn_pos)
+
+            self.screen.blit(rotated_image, rect)  
+
+            if self.frame_index >= len(cac_pattern)-1:
+                self.frame_index = 0
+                self.cac_attack = 0
+
+            attack_sprite = pygame.sprite.Sprite()
+            attack_sprite.rect = rect
+            attack_sprite.image = pygame.Surface(rect.size, pygame.SRCALPHA)  # image obligatoire pour les collisions
+
+            touched_enemies = pygame.sprite.spritecollide(attack_sprite, combined_group, dokill=False)
+           
+            for i in touched_enemies:
+                i.life -=1
+
+
 
     def Attack(self,cible):
         if self.alive:

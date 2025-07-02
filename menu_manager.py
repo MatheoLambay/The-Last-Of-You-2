@@ -20,7 +20,7 @@ class menuManager:
 
     def go_home(self):
         """Revenir au menu principal."""
-        while len(self.current_menu) > 1:
+        while len(self.current_menu) > 2:
             self.current_menu.pop().close()
         self.current_menu[-1].open(self.screen)
 
