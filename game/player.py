@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
             self.max_xp = self.get_next_lvl_xp()
 
     def get_next_lvl_xp(self):
-        return int(1000 * (1.1**self.lvl - 1.1**(self.lvl-1)))
+        return int(1000 * (1.5**self.lvl - 1.5**(self.lvl-1)))
 
     def point_at(self, m_pos):
         if self.alive:

@@ -14,6 +14,8 @@ class madmax(pygame.sprite.Sprite):
         self.attack = 2
         self.velocity = 0.5
         self.angle = 0
+        self.gold = 400
+
         self.last_angle = None
         self.x = 1920//2
         self.y = 1080//2
@@ -34,6 +36,7 @@ class madmax(pygame.sprite.Sprite):
         self.original_image = pygame.image.load("img/game/boss/madmax.png").convert_alpha()
         self.image = self.original_image
         self.rect = self.image.get_rect(center=(1920//2, 1080//2))
+        self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
 
         self.poisons = []
         self.item_dropped = 0
@@ -57,16 +60,13 @@ class madmax(pygame.sprite.Sprite):
             self.x += direction.x
             self.y += direction.y
             self.rect.center = (self.x, self.y)
+        self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
 
     def spawn(self):
         for z in self.zombies:
-            z.life = 0
+            z.kill()
         for w in self.walls:
             pygame.draw.rect(self.screen,"grey",w)
-
-    
-
-    
 
     def boss_management(self,player):
         font = pygame.font.Font('freesansbold.ttf', 30)
@@ -81,7 +81,9 @@ class madmax(pygame.sprite.Sprite):
         self.poison_management(player)
         self.item_drop()
 
+
         self.screen.blit(self.image, self.rect)
+        pygame.draw.rect(self.screen,"blue",self.hitbox,width=1)
         
     def poison_spawn(self):
         current_time = pygame.time.get_ticks()
@@ -112,15 +114,27 @@ class madmax(pygame.sprite.Sprite):
                 self.screen.blit(img, (500,500))
             
     def update(self,player):
-        self.spawn()
-        print(self.life)
-        for w in self.walls:
-            player.collision(w)
         
-        self.point_at((player.x,player.y))
-        self.move_to(player.x,player.y)
-        # self.mad_max.poison_spawn(
-        self.boss_management(player)
+
+        if self.life > 0:
+            self.spawn()
+            for w in self.walls:
+                player.collision(w)
+
+            if player.hitbox.colliderect(self.hitbox):
+                print("detect")
+                current_time = pygame.time.get_ticks()
+                if current_time - self.last_attack_time >= self.attack_interval:
+                    player.life -= self.attack
+                    self.last_attack_time = current_time
+                
+            self.point_at((player.x,player.y))
+            self.move_to(player.x,player.y)
+            # self.mad_max.poison_spawn(
+            self.boss_management(player)
+        elif self.life < 1:
+            player.gold += self.gold
+            self.kill()
 
         
 

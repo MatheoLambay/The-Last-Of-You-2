@@ -1,14 +1,13 @@
 import pygame
 import random
 import json
-import math
 from game.player import Player
 from game.map import Map
 from game.zombie import Zombie
 from game.bullet import Bullet
 from game.hud import Hud
 from game.turret import Turret
-from game.items import *
+from game.items import dropItems
 from game.ShopPnj import ShopPnj
 from game.BOSS.madmax import madmax
 from button import Button
@@ -35,13 +34,13 @@ class gameManager(Map):
         self.items_3 = self.controls["item 3"]
      
         
-        
         #création du joueur et du hud
         self.player = Player(screen,player["link"],1920/2,1080/2,player["life"],player["attack"],player["velocity"],player["weapon_bullet_max"],player["attack_cooldown"],player["range_item"])
         self.player_bar = Hud(screen,self.player.x,self.player.y,100,10,self.player.life,self.player.weapon_bullet,self.player.weapon_bullet_max,self.player.xp,self.player.max_xp,self.player.gold,self.player.lvl)
         
         #création de la map
         self.map = Map(screen,texture_map)
+        self.map.get_random_case()
         self.border = self.map.map_border()
         self.background = self.map.get_spawn_map()
 
@@ -65,8 +64,8 @@ class gameManager(Map):
         self.zombie_interval = 1000
 
         # intervalles pour les dégâts du joueur
-        self.last_damage_time = 0
-        self.damage_interval = 1000
+        # self.last_damage_time = 0
+        # self.damage_interval = 1000
 
         # statistiques du joueur (temps)
         self.last_play_time = 0
@@ -121,12 +120,14 @@ class gameManager(Map):
         
             """spawn bullet"""
             mouse_click = pygame.mouse.get_pressed()
+            
             if mouse_click[0] and self.player.weapon_bullet > 0 and self.player.can_attack: 
                 if current_time - self.last_bullet_time >= self.bullet_interval and self.player.can_attack:
                     self.new_bullet(mouse_pos,self.player)
                     self.last_bullet_time = current_time 
             elif mouse_click[2]:
-               self.player.cac_attack = 1
+                self.player.cac_attack = 1
+         
 
             """spawn zombie"""
             if current_time - self.last_zombie_time >= self.zombie_interval and not(self.player_in_safezone):
@@ -176,7 +177,8 @@ class gameManager(Map):
 
 
             
-            if self.player.score == 10:
+            if self.player.score == 100:
+                print("ici")
                 self.boss.add(self.mad_max)
                 self.player.score +=1
             self.boss_management()
@@ -228,6 +230,8 @@ class gameManager(Map):
         pnj_spawn = self.map.get_random_case()
         p.map_x = pnj_spawn[0]
         p.map_y = pnj_spawn[1]
+        p.x = random.randint(100,1820)
+        p.y = random.randint(100,980)
 
     
 
@@ -328,25 +332,6 @@ class gameManager(Map):
                         
                         self.player.Attack(z)
                         
-                        if z.life < 1:
-                            """zombie drop"""
-                            z.drop_gold(self.player)
-                            self.stat_player["dead killed"] += 1
-                            self.stat_player["total gold"] += z.gold
-                            self.stat_player["total xp"] += z.xp
-                            self.stat_player[z.name] += 1
-                            self.zombie_killed[z.name] +=1
-
-                            self.player.get_level(z.xp)
-                            self.player.score += 10
-                            
-                            drop = random.randint(1,100)
-                            if 1 <= drop <= 30:
-                                self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",5000,0.1))
-                            
-                            elif 30 <= drop <= 35:
-                                self.items.append(dropItems(self.screen,"img\game\heal.png",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
-                        
                         self.bullet.pop(self.bullet.index(b))
                         break
 
@@ -417,43 +402,45 @@ class gameManager(Map):
                 if self.player.player_in_market == 0:
                     t.draw()
                     t.update(self.zombies, self.new_bullet)
-    
+
 
     def zombies_management(self):
         self.zombies.update(self.player, self.player_in_safezone)
-
         for z in self.zombies:
-            z.draw()
+            if z.life < 1:
 
-            # Collision avec le joueur (zone réduite autour du joueur)
-            if abs(z.x - self.player.x) <= 20 and abs(z.y - self.player.y) <= 20:
-                current_time = pygame.time.get_ticks()
-                if current_time - self.last_damage_time >= self.damage_interval:
-                    z.Attack(self.player)
-                    self.last_damage_time = current_time
+                print("dead")
+                self.stat_player["dead killed"] += 1
+                self.stat_player["total gold"] += z.gold
+                self.stat_player["total xp"] += z.xp
+                self.stat_player[z.name] += 1
+                self.zombie_killed[z.name] +=1
+                self.player.get_level(z.xp)
 
-    
+                drop = random.randint(1,150)
+                print(drop)
+                if 1 <= drop <= 30:
+                    self.items.append(dropItems(self.screen,"img\game\iammo.webp",z.x,z.y,self.map.case_x,self.map.case_y,40,"ammo",5000,0.1))
+                
+                elif 30 <= drop <= 35:
+                    self.items.append(dropItems(self.screen,"img\game\heal.png",z.x,z.y,self.map.case_x,self.map.case_y,1,"heal",8000,0.1))
+                z.drop_gold(self.player)
+                z.kill()
+                self.player.score += 10
+
+
     def boss_management(self):
-
         self.boss.update(self.player)
-        [b.kill() for b in self.boss  if b.life < 1]
-            
 
-
+       
     def player_management(self):
         if self.player.life < 1:
             with open("data/stat.json", 'w') as w:
                 json.dump(self.stat_player, w)
             self.player.is_alive = 0
         else:
+            
             self.combined_group = pygame.sprite.Group()
             self.combined_group.add(self.zombies)
             self.combined_group.add(self.boss)
             self.player.cac_Attack(self.combined_group)
-                # for z in self.zombies:
-                #     if z.rect.colliderect(rect):
-                #         z.life -=1
-
-                
-                
-            

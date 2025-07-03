@@ -20,6 +20,10 @@ class settingsMenu:
         self.titlerect = self.title_img.get_rect()
         self.titlerect.topleft = (0,0)
 
+        self.background_img = pygame.image.load("img/settings_menu/bg.png").convert_alpha()
+        self.background_img = pygame.transform.scale(self.background_img, (1920, 1080))
+        self.background_img_rect = self.background_img.get_rect(topleft=(0,0))
+
         self.back_img = pygame.image.load("img\settings_menu\goback_btn.png").convert_alpha()
         self.save_img = pygame.image.load("img\settings_menu\save_btn.png").convert_alpha()
         self.reset_img = pygame.image.load("img/settings_menu/reset_btn.png").convert_alpha()
@@ -148,6 +152,7 @@ class settingsMenu:
     def update(self, key, manager):
         """Met à jour les interactions du menu."""
         self.screen.fill((0,0,0))
+        self.screen.blit(self.background_img, self.background_img_rect)
         self.screen.blit(self.title_img, self.titlerect)
         self.zombie.draw()
         self.zombie.point_at(pygame.mouse.get_pos())
