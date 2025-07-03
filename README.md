@@ -1,7 +1,6 @@
 # The-Last-Of-You-2
 
-* poison dégat
-* boss dégat
-* poison despawn
+* boss dégats
+* cac drop gold
 * drop ammo pendant fight
 

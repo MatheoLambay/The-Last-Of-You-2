@@ -29,11 +29,12 @@ class Player(pygame.sprite.Sprite):
         self.original_image = pygame.transform.scale(self.original_image, (250 // 2, 250 // 2))
         self.image = self.original_image
 
-         #interval et animation càc joueur
+        #interval et animation càc joueur
         self.frame_index = 0
         self.last_frame_time = 0
         self.frame_interval = 50
         self.cac_attack = 0
+        self.cac_touched = []
         
         # self.hitbox = pygame.draw.rect(self.screen,"red",(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width()),10)
         self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
@@ -182,6 +183,7 @@ class Player(pygame.sprite.Sprite):
             self.screen.blit(rotated_image, rect)  
 
             if self.frame_index >= len(cac_pattern)-1:
+                self.cac_touched = []
                 self.frame_index = 0
                 self.cac_attack = 0
 
@@ -190,9 +192,15 @@ class Player(pygame.sprite.Sprite):
             attack_sprite.image = pygame.Surface(rect.size, pygame.SRCALPHA)  # image obligatoire pour les collisions
 
             touched_enemies = pygame.sprite.spritecollide(attack_sprite, combined_group, dokill=False)
-           
-            for i in touched_enemies:
-                i.life -=1
+            
+            if self.frame_index == 1:
+                for i in touched_enemies:
+                    if i not in self.cac_touched:
+                        i.life -= 1
+                        self.cac_touched.append(i)
+
+                
+                
 
 
 

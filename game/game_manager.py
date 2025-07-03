@@ -85,7 +85,7 @@ class gameManager(Map):
         self.pnjs.append(ShopPnj(self.screen,"img\game\Seller.png",random.randint(100,1820),random.randint(100,980),pnj_spawn[0],pnj_spawn[1],"seller"))
 
         self.mad_max = madmax(self.screen,self.zombies)
-        self.boss_actif = 0
+       
 
     def open(self, screen):
         screen.fill((255,255,255))
@@ -175,9 +175,12 @@ class gameManager(Map):
             self.player_items_management()
 
 
-            self.boss_management()
-            if self.player.score > 9:
+            
+            if self.player.score == 10:
                 self.boss.add(self.mad_max)
+                self.player.score +=1
+            self.boss_management()
+
 
             """player life"""
             self.player_management()
@@ -314,9 +317,11 @@ class gameManager(Map):
             else:
                 b.draw()
 
-                if (b.rect.colliderect(self.mad_max.rect) and self.boss_actif):
-                    self.player.Attack(self.mad_max)
-                    self.bullet.pop(self.bullet.index(b))
+                for bo in self.boss:
+                    if b.rect.colliderect(bo.rect):
+                        self.player.Attack(bo)
+                        self.bullet.pop(self.bullet.index(b))
+
 
                 for z in self.zombies:
                     if( z.x - 20 <= b.x <= z.x + 20 and z.y - 20 <= b.y <= z.y + 20):
@@ -429,8 +434,9 @@ class gameManager(Map):
 
     
     def boss_management(self):
+
         self.boss.update(self.player)
-        [b.kill() for b in self.boss if b.life < 1]
+        [b.kill() for b in self.boss  if b.life < 1]
             
 
 

@@ -58,11 +58,15 @@ class madmax(pygame.sprite.Sprite):
             self.y += direction.y
             self.rect.center = (self.x, self.y)
 
-    def apparition(self):
+    def spawn(self):
         for z in self.zombies:
             z.life = 0
         for w in self.walls:
             pygame.draw.rect(self.screen,"grey",w)
+
+    
+
+    
 
     def boss_management(self,player):
         font = pygame.font.Font('freesansbold.ttf', 30)
@@ -108,7 +112,8 @@ class madmax(pygame.sprite.Sprite):
                 self.screen.blit(img, (500,500))
             
     def update(self,player):
-        self.apparition()
+        self.spawn()
+        print(self.life)
         for w in self.walls:
             player.collision(w)
         
@@ -117,5 +122,6 @@ class madmax(pygame.sprite.Sprite):
         # self.mad_max.poison_spawn(
         self.boss_management(player)
 
+        
 
   
