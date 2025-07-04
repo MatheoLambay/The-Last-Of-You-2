@@ -2,7 +2,7 @@
 "1":
 {
     "name": "Elliot",
-    "attack": 100,
+    "attack": 1,
     "life": 3,
     "link": "img/game/easter_egg.png",
     "velocity": 2,
