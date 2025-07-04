@@ -151,6 +151,16 @@ class gameManager(Map):
                         z.x += 1920
                     elif map_position == "r":
                         z.x -= 1920
+                for b in self.boss:
+                    if map_position == "u":
+                        b.y += 1080
+                    elif map_position == "d":
+                        b.y -= 1080
+                    elif map_position == "l":
+                        b.x += 1920
+                    elif map_position == "r":
+                        b.x -= 1920
+
             
             """check map border"""
             self.border = self.map.map_border()

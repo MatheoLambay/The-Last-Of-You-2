@@ -62,11 +62,11 @@ class madmax(pygame.sprite.Sprite):
             self.rect.center = (self.x, self.y)
         self.hitbox = pygame.Rect(self.x-self.original_image.get_height()//2,self.y-self.original_image.get_width()//2,self.original_image.get_height(),self.original_image.get_width())
 
-    def spawn(self):
-        for z in self.zombies:
-            z.kill()
-        for w in self.walls:
-            pygame.draw.rect(self.screen,"grey",w)
+    # def spawn(self):
+    #     for z in self.zombies:
+    #         z.kill()
+    #     for w in self.walls:
+    #         pygame.draw.rect(self.screen,"grey",w)
 
     def boss_management(self,player):
         font = pygame.font.Font('freesansbold.ttf', 30)
@@ -117,9 +117,9 @@ class madmax(pygame.sprite.Sprite):
         
 
         if self.life > 0:
-            self.spawn()
-            for w in self.walls:
-                player.collision(w)
+            # self.spawn()
+            # for w in self.walls:
+            #     player.collision(w)
 
             if player.hitbox.colliderect(self.hitbox):
                 print("detect")

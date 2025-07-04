@@ -87,6 +87,8 @@ class resumeMenu:
             self.screen.blit(data_text, textRect)
             self.last_upgrade = textRect
 
+        self.menu_button.draw()
+
     def get_level(self):
         if self.xp >= self.max_xp:
             self.lvl += 1
@@ -102,19 +104,19 @@ class resumeMenu:
 
     def update(self, event, manager):
         """Met à jour les interactions du menu."""
-        self.screen.fill((255,255,255))
+        # self.screen.fill((255,255,255))
        
-        self.background_rect.topleft = (0,0)
-        self.screen.blit(self.background_img, self.background_rect)
+        # self.background_rect.topleft = (0,0)
+        # self.screen.blit(self.background_img, self.background_rect)
 
-        self.title_rect.center = (1920/2,100)
-        self.screen.blit(self.title_img, self.title_rect)
+        # self.title_rect.center = (1920/2,100)
+        # self.screen.blit(self.title_img, self.title_rect)
 
-        self.divers_rect.topright = (self.title_rect.bottomleft[0],self.title_rect.bottomleft[1])
-        self.screen.blit(self.divers_img, self.divers_rect)
+        # self.divers_rect.topright = (self.title_rect.bottomleft[0],self.title_rect.bottomleft[1])
+        # self.screen.blit(self.divers_img, self.divers_rect)
 
-        self.upgrade_rect.topleft = (self.title_rect.bottomright[0],self.title_rect.bottomright[1])
-        self.screen.blit(self.upgrade_img, self.upgrade_rect)
+        # self.upgrade_rect.topleft = (self.title_rect.bottomright[0],self.title_rect.bottomright[1])
+        # self.screen.blit(self.upgrade_img, self.upgrade_rect)
 
         self.get_level()
 
@@ -127,7 +129,7 @@ class resumeMenu:
         pygame.draw.rect(self.screen,"yellow",(textRect.bottomleft[0]+5,textRect.bottomleft[1]+5,(1920-200)*ratio,30))
         self.screen.blit(name_text, textRect)
         
-        self.menu_button.draw()
+        
         if self.menu_button.detect():
             self.fade(manager.screen,1920,1080)
             manager.go_home()

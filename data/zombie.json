@@ -26,19 +26,6 @@
         "min_score": 0,
         "scale": 1 
     },
-    "zombie_vert_3" : 
-    {
-        "name": "greendead",
-        "attack": 1,
-        "life": 1,
-        "link":"img/game/zombie/greendead3.png",
-        "gold": 10,
-        "xp":10,
-        "velocity": 0.5,
-        "rate": 80,
-        "min_score": 0,
-        "scale": 1
-    },
     "zombie_bleu_1" : 
     {
         "name": "bluedead",
@@ -65,19 +52,6 @@
         "min_score": 300,
         "scale": 1 
     },
-    "zombie_bleu_3" : 
-    {
-        "name": "bluedead",
-        "attack": 1,
-        "life": 2,
-        "link":"img/game/zombie/bluedead3.png",
-        "gold": 25,
-        "xp":20,
-        "velocity": 0.7,
-        "rate": 40,
-        "min_score": 300,
-        "scale": 1 
-    },
     "zombie_red_1" : 
     {
         "name": "reddead",
@@ -101,19 +75,6 @@
         "xp":30,
         "velocity": 0.4,
         "rate": 50,
-        "min_score": 500,
-        "scale": 1 
-    },
-    "zombie_red_3" : 
-    {
-        "name": "reddead",
-        "attack": 1,
-        "life": 3,
-        "link":"img/game/zombie/reddead3.png",
-        "gold": 40,
-        "xp":30,
-        "velocity": 0.4,
-        "rate": 40,
         "min_score": 500,
         "scale": 1 
     },
