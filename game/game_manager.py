@@ -199,7 +199,7 @@ class gameManager(Map):
     
             if self.end_btn.detect():
                 from menu.resume_menu import resumeMenu
-                manager.push_menu(resumeMenu(self.screen,self.zombie_killed,self.time_played,self.player.gold,self.player.current_upgrade))
+                manager.push_menu(resumeMenu(self.screen,self.zombie_killed,self.time_played,self.player.gold,self.player.current_upgrade,self.stat_player["total xp"]))
             
 
     def fade_death(self):
@@ -436,7 +436,7 @@ class gameManager(Map):
     def player_management(self):
         if self.player.life < 1:
             with open("data/stat.json", 'w') as w:
-                json.dump(self.stat_player, w)
+                json.dump(self.stat_player, w,indent=4)
             self.player.is_alive = 0
         else:
             
