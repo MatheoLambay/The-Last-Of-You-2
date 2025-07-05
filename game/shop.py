@@ -19,7 +19,7 @@ class shopMenu:
         self.items_upgrade = []
         self.current_upgrade = []
 
-        with open('data/upgrade.json','r') as f:
+        with open('data/shop_items.json','r') as f:
             self.data = json.load(f)
        
         self.selectUpgrade()
@@ -113,7 +113,6 @@ class shopMenu:
                         self.player.current_upgrade[i[1].name] += 1
                     else:
                         self.player.current_upgrade[i[1].name] = 1
-                    setattr(self.player, "player_just_bought", 1)
-                    manager.pop_menu()
+                 
                 else:
                     print('no money')

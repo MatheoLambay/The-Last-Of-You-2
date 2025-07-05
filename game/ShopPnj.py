@@ -1,12 +1,12 @@
 import pygame
 from game.shop import shopMenu
 
+
 class ShopPnj:
     def __init__(self,screen,link,x,y,map_x,map_y,name,scale=1):
 
         self.screen = screen
         self.name = name
-
 
         self.image = pygame.image.load(link).convert_alpha()
         width = self.image.get_width()

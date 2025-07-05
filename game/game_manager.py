@@ -9,6 +9,7 @@ from game.hud import Hud
 from game.turret import Turret
 from game.items import dropItems
 from game.ShopPnj import ShopPnj
+from game.lvlup import LvLup
 from game.BOSS.madmax import madmax
 from button import Button
 
@@ -70,8 +71,6 @@ class gameManager(Map):
         # statistiques du joueur (temps)
         self.last_play_time = 0
         self.play_interval = 1000
-
-       
 
         self.time_played = 0
         self.zombie_killed = {"greendead":0,"bluedead":0,"reddead":0,"yellowdead":0}
@@ -193,9 +192,8 @@ class gameManager(Map):
                 self.player.score +=1
             self.boss_management()
 
-
             """player life"""
-            self.player_management()
+            self.player_management(manager)
 
             if not(self.player.player_in_market):  
                 self.draw_update_player_hud()
@@ -379,10 +377,7 @@ class gameManager(Map):
                             p.openShop(manager,self.player)
                             
                         
-                    if self.player.player_just_bought:
-                        print("Player just bought an item, resetting market button")
-                        self.set_seller_position(p)
-                        self.player.player_just_bought = 0
+                    
                     
                 """Gestion de collision avec le joueur"""
                 self.player.collision(p)
@@ -443,13 +438,18 @@ class gameManager(Map):
         self.boss.update(self.player)
 
        
-    def player_management(self):
+    def player_management(self,manager):
+        
         if self.player.life < 1:
             with open("data/stat.json", 'w') as w:
                 json.dump(self.stat_player, w,indent=4)
             self.player.is_alive = 0
         else:
-            
+            self.player.powers.update()
+            if self.player.player_level_up:
+                self.player_in_safezone = 1
+                manager.push_menu(LvLup(self.screen,self.player))
+
             self.combined_group = pygame.sprite.Group()
             self.combined_group.add(self.zombies)
             self.combined_group.add(self.boss)

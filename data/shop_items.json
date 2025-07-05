@@ -1,43 +1,21 @@
 {
-"max_life" : 
+"life" : 
 {
-    "name": "life_max",
-    "description":"increase life max",
+    "name": "life",
+    "max":"life_max",
+    "description":"increase life",
     "link":"img/game/heal.png",
     "price": 40,
     "amont": 3
 },
-"max_ammo" : 
+"ammo" : 
 {
-    "name": "weapon_bullet_max",
-    "description":"incr max ammo",
+    "name": "weapon_bullet",
+    "max": "weapon_bullet_max",
+    "description":"incr ammo",
     "link":"img/game/iammo.webp",
     "price": 10,
     "amont": 100
-},
-"increase_damage" : 
-{
-    "name": "attack",
-    "description":"incr damage",
-    "link":"img/game/damage.png",
-    "price": 10,
-    "amont": 1
-},
-"increase_velocity" : 
-{
-    "name": "velocity",
-    "description":"incr velocity",
-    "link":"img/game/velocity.png",
-    "price": 10,
-    "amont": 1
-},
-"increase_range_item":
-{
-    "name": "range_item",
-    "description":"incr item range",
-    "link":"img/game/velocity.png",
-    "price": 10,
-    "amont": 30
 },
 
 "basic_turret":

@@ -1,4 +1,3 @@
-import pygame
 
 class upgrade:
     def __init__(self,name,description,amount,price,stat=None):
@@ -14,7 +13,10 @@ class upgrade:
         # Vérifie si le joueur a l'attribut à upgrader
         if hasattr(player, self.name):
             current = getattr(player, self.name)
-            setattr(player, self.name, current + self.amount)
+            if current + self.amount > getattr(player,self.name+"_max"):
+                setattr(player, self.name, getattr(player,self.name+"_max"))
+            else:
+                setattr(player, self.name, current + self.amount)
         else:
             print(f"L'attribut {self.name} n'existe pas sur le joueur.")
 

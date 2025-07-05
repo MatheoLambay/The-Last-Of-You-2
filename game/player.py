@@ -50,13 +50,14 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
 
         self.lvl = 1
+        self.player_level_up = 0
         self.xp = 0
         self.max_xp = self.get_next_lvl_xp()
 
         self.items = [0,0,0]
+        self.powers = pygame.sprite.Group()
 
         self.player_in_market = 0 
-        self.player_just_bought = 0
         self.range_item = range_item
         self.current_upgrade = {}
 
@@ -64,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.xp += new_xp
         if self.xp >= self.max_xp:
             self.lvl += 1
+            self.player_level_up = 1
             self.xp = 0
             self.max_xp = self.get_next_lvl_xp()
 

@@ -56,9 +56,6 @@ class Turret(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=(self.x, self.y))
 
 
-
-
-
     def update(self, zombies, new_bullet_func):
         if self.weapon_bullet <= 0:
             self.kill()
